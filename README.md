@@ -22,6 +22,12 @@ The emulator is a work in progress, and we're trying to improve it however we ca
 
 ### More projects coming soon!
 
+## Links:
+
+- About: https://axononymous.github.io/A-O-Studios/
+* Html Emulator: https://axononymous.github.io/A-O-Studios/HtmlEmulator/
++
+
 As A&O Studios grows, we'll add more projects, tools, and experiments to this repository.
 
 ## Contributing

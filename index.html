@@ -14,11 +14,16 @@
         text-align: center;
         font-size: 40px;
         color: #f2f2f2;
+        transition: text-shadow 0.2s ease;
+      }
+      h1:hover {
+        text-shadow: 0 0 4px white;
       }
       h2 {
         text-align: center;
-        font-size: 30px;
+        font-size: 25px;
         color: #f2f2f2;
+        margin-top: 10px;
       }
 
       p {
@@ -29,22 +34,82 @@
         background-color: #111116;
       }
 
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        max-width: 1100px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+
       .card {
-        height: 25vh;
-        width: 75;
+        box-sizing: border-box;
+        height: auto;
+        max-height: 180px;
+        min-width: 0;
         background-color: #1b1a24;
-        padding: 20px;
+        padding: 24px;
         border-radius: 16px;
-        padding: 20px;
-        margin-left: 100px;
-        margin-right: 100px;
         border: 2px solid #454157;
-        transition: border 0.2s ease;
-        margin-top: 20px;
+        color: #aaa6bc;
+        transition: border-color 0.2s ease;
+        transition: transform 0.2s ease;
+      }
+
+      .card:hover {
+        border-color: #a78bfa;
+        transform: translateY(-2px);
+      }
+
+      /* Projects section underneath */
+      .projects-card {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 24px;
+        box-sizing: border-box;
+        width: calc(100% - 40px);
+        background-color: #1b1a24;
+        border: 2px solid #454157;
+        border-radius: 16px;
+        color: #f2f2f2;
+      }
+
+      .projects-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .project {
+        background-color: #282638;
+        border: 1px solid #454157;
+        border-radius: 12px;
+        padding: 16px;
+        transition:
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .project:hover {
+        border-color: #a78bfa;
+        transform: translateY(-2px);
+      }
+      .project h3 {
+        color: #f2f2f2;
+        margin-top: 0;
+      }
+      .project p {
         color: #aaa6bc;
       }
-      .card:hover {
-        border: 2px solid #a78bfa;
+      @media (max-width: 600px) {
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .projects-list {
+          grid-template-columns: 1fr;
+        }
       }
       button {
         background-color: #282638;
@@ -52,7 +117,7 @@
         border-radius: 20px;
         border: 2px solid #454157;
         width: 160px;
-        height: 60px;
+        height: 40px;
         display: block;
         margin: 0 auto;
         margin-top: 20px;
@@ -74,23 +139,57 @@
 
   <body>
     <h1 class="Header">Welcome to A&O Studios.</h1>
+    <div class="card-grid">
+      <div class="card">
+        <h2>About us</h2>
+        <p>
+          A&O Studios is an HTML and CSS web development project created by
+          Axononymous and OddDuckling12. We are currently learning these
+          languages and plan on sharing what we discover.
+        </p>
+      </div>
 
-    <div class="card">
-      <p>
-        A&O Studios is a html and css web developement project created by us,
-        Axononymous and OddDuckling12. We are currently learning these
-        languages, and hopefully, by creating this project, we will be able to
-        share our findings with other people.
-      </p>
+      <div class="card">
+        <h2>Our goal</h2>
+        <p>
+          We wish to create solutions and methods mostly for unblocked games,
+          and web development in general.
+        </p>
+      </div>
     </div>
-    <h2>Our goal:</h2>
-    <div class="card">
-      We wish to create solutions and methods mostly for unblocked games, and
-      just web developement in general.
+
+    <div class="projects-card">
+      <h2>Current Projects</h2>
+
+      <div class="projects-list">
+        <div class="project">
+          <h3>Html Emulator</h3>
+          <p>
+            We're making a simple html runner for unblocked games. You can paste
+            in your own .html code, and then it will run it in an about:blank
+            tab for you.
+          </p>
+        </div>
+
+        <div class="project">
+          <h3>Project Two</h3>
+          <p>Add another project and its description here.</p>
+        </div>
+      </div>
     </div>
-    <button onclick="window.open('https://github.com/Axononymous/A-O-Studios')">
+
+    <button
+      onclick="
+        window.open(
+          'https://github.com/Axononymous/A-O-Studios',
+          '_blank',
+          'noopener,noreferrer',
+        )
+      "
+    >
       Our GitHub Repository
     </button>
+
     <p class="bloof">bloof :3</p>
   </body>
 </html>

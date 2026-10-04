@@ -2,23 +2,6 @@
 
 A&O Studios is a small web development team created by **Axononymous** and **OddDuckling12**. We're learning HTML, CSS, and overall web development by building a variety of special games and tools.
 
-## Current Projects
-
-### HTML Emulator
-
-We are creating an **HTML Emulator**, which is a tool designed to run custom HTML code for unblocked games or other code of your choice.
-The emulator is a work in progress, and we're trying to improve it however we can.
-
-### More projects coming soon!
-
-As A&O Studios grows, we'll add more projects, tools, and experiments to this repository.
-
-## What we're learning
-
-- HTML
-- CSS
-- JavaScript
-
 ## Overview
 
 All of our projects are designed to run in a web browser. If you want to run these for yourself, follow the steps below.
@@ -29,6 +12,17 @@ All of our projects are designed to run in a web browser. If you want to run the
 4. Follow any other instructions provided in the project's directory, if specified.
 
 Some features may function differently depending on your browser settings, and wifi network.
+
+## Current Projects
+
+### HTML Emulator
+
+We are creating an **HTML Emulator**, which is a tool designed to run custom HTML code for unblocked games or other code of your choice.
+The emulator is a work in progress, and we're trying to improve it however we can.
+
+### More projects coming soon!
+
+As A&O Studios grows, we'll add more projects, tools, and experiments to this repository.
 
 ## Contributing
 

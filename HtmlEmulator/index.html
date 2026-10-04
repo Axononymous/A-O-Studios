@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://googleapis.com" />
+    <link rel="preconnect" href="https://gstatic.com" crossorigin />
+    <link
+      href="https://googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/AO-Studios/HtmlEmulator/main/HtmlEmulator/icon.png"
+    />
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        font-size: 20px;
+      }
+      p.footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-shadow: 0 0 8px #ff3198;
+        font-size: 12px;
+        text-align: center;
+        color: #ff3198;
+      }
+      body {
+        background-color: #221b46;
+        font-family: "JetBrains Mono", monospace;
+      }
+      h1 {
+        color: #ff3198;
+        font-family: "JetBrains Mono", monospace;
+        text-align: center;
+        text-shadow: 0 0 8px #ff3198;
+        font-size: 40px;
+      }
+      textarea {
+        width: 80%;
+        height: 70vh;
+        background-color: #f0f0f0;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
+        transition:
+          box-shadow 0.3s ease-in-out,
+          transform 0.3s ease-in-out;
+        padding: 20px;
+        resize: vertical;
+        font-size: 20px;
+      }
+      button {
+        width: 200px;
+        height: 50px;
+        border-radius: 18px;
+        font-size: 35px;
+        background-color: #ff3198;
+        color: #000000;
+        border: none;
+        margin-top: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow:
+          0 0 5px #ff3198,
+          0 0 25px #ff3198;
+        margin-bottom: 20px;
+        font-size: 20px;
+      }
+      button:hover {
+        background-color: #ff3198;
+        cursor: pointer;
+        transform: translateY(-2px);
+        animation: hoverAnimation 0.3s ease-in-out;
+        font-size: 20px;
+      }
+      @keyframes hoverAnimation {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-2px);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Html Emulator</h1>
+    <p class="footer">Made by A&O Studios.</p>
+    <div class="container">
+      <textarea id="code" placeholder="Insert html. . . "></textarea>
+      <button onclick="Newtab()">Emulate</button>
+    </div>
+    <script>
+      function Newtab() {
+        const code = document.getElementById("code").value;
+        const NewWindow = window.open("about:blank", "_blank");
+        NewWindow.document.open();
+        NewWindow.document.write(code);
+        NewWindow.document.close();
+      }
+    </script>
+  </body>
+</html>

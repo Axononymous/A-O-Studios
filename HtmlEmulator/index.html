@@ -1,192 +1,103 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A&O Studios</title>
-
+    <link rel="preconnect" href="https://googleapis.com" />
+    <link rel="preconnect" href="https://gstatic.com" crossorigin />
+    <link
+      href="https://googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/Axononymous/A-O-Studios/main/HtmlEmulator/favicon.png"
+    />
     <style>
-      em {
-        font-weight: bold;
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        font-size: 20px;
       }
-
-      h1 {
+      p.footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-shadow: 0 0 8px #a78bfa;
+        font-size: 12px;
         text-align: center;
-        font-size: 40px;
-        color: #f2f2f2;
-        transition: text-shadow 0.2s ease;
+        color: #a78bfa;
       }
-      h1:hover {
-        text-shadow: 0 0 4px white;
-      }
-      h2 {
-        text-align: center;
-        font-size: 25px;
-        color: #f2f2f2;
-        margin-top: 10px;
-      }
-
-      p {
-        color: #aaa6bc;
-      }
-
       body {
         background-color: #111116;
+        font-family: "JetBrains Mono", monospace;
       }
-
-      .card-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-        max-width: 1100px;
-        margin: 20px auto;
-        padding: 0 20px;
+      h1 {
+        color: #a78bfa;
+        font-family: "JetBrains Mono", monospace;
+        text-align: center;
+        text-shadow: 0 0 4px black;
+        font-size: 40px;
       }
-
-      .card {
-        box-sizing: border-box;
-        height: auto;
-        max-height: 180px;
-        min-width: 0;
+      textarea {
+        width: 80%;
+        height: 70vh;
+        color: #f4f1ff;
         background-color: #1b1a24;
-        padding: 24px;
-        border-radius: 16px;
-        border: 2px solid #454157;
-        color: #aaa6bc;
-        transition: border-color 0.2s ease;
-        transition: transform 0.2s ease;
-      }
-
-      .card:hover {
-        border-color: #a78bfa;
-        transform: translateY(-2px);
-      }
-
-      .projects-card {
-        max-width: 1100px;
-        margin: 24px auto;
-        padding: 24px;
-        box-sizing: border-box;
-        width: calc(100% - 40px);
-        background-color: #1b1a24;
-        border: 2px solid #454157;
-        border-radius: 16px;
-        color: #f2f2f2;
-      }
-
-      .projects-list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .project {
-        background-color: #282638;
-        border: 1px solid #454157;
-        border-radius: 12px;
-        padding: 16px;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
         transition:
-          border-color 0.2s ease,
-          transform 0.2s ease;
-      }
-
-      .project:hover {
-        border-color: #a78bfa;
-        transform: translateY(-2px);
-      }
-      .project h3 {
-        color: #f2f2f2;
-        margin-top: 0;
-      }
-      .project p {
-        color: #aaa6bc;
-      }
-      @media (max-width: 600px) {
-        .card-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .projects-list {
-          grid-template-columns: 1fr;
-        }
+          box-shadow 0.3s ease-in-out,
+          transform 0.3s ease-in-out;
+        padding: 20px;
+        resize: vertical;
+        font-size: 20px;
+        outline: #454157;
+        resize: none;
       }
       button {
-        background-color: #282638;
-        color: #f2f2f2;
-        border-radius: 20px;
-        border: 2px solid #454157;
-        width: 160px;
-        height: 40px;
-        display: block;
-        margin: 0 auto;
-        margin-top: 20px;
-        transition:
-          background 0.2s ease,
-          transform 0.2s ease;
+        width: 200px;
+        height: 50px;
+        border-radius: 12px;
+        font-size: 35px;
+        background-color: #a78bfa;
+        color: #000000;
+        margin-top: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow:
+          0 0 5px #a78bfa,
+          0 0 25px #a78bfa;
+        margin-bottom: 20px;
+        font-size: 20px;
+        transition: background-color 0.2s ease;
+        transition: box-shadow 0.2s ease;
+        transition: transform 0.2s ease;
       }
       button:hover {
-        background-color: #a78bfa;
         cursor: pointer;
         transform: translateY(-2px);
-      }
-      p.bloof {
-        font-size: 10px;
+        font-size: 20px;
+        background-color: #c4b5fd;
+        box-shadow: 0 0 25px #c4b5fd;
       }
     </style>
   </head>
-
   <body>
-    <p class="bloof">bloof :3</p>
-    <h1 class="Header">Welcome to A&O Studios.</h1>
-    <div class="card-grid">
-      <div class="card">
-        <h2>About us</h2>
-        <p>
-          A&O Studios is an HTML and CSS web development project created by
-          Axononymous and OddDuckling12. We are currently learning these
-          languages and plan on sharing what we discover.
-        </p>
-      </div>
-
-      <div class="card">
-        <h2>Our goal</h2>
-        <p>
-          We wish to create solutions and methods mostly for unblocked games,
-          and web development in general.
-        </p>
-      </div>
+    <h1>Html Emulator</h1>
+    <p class="footer">Made by A&O Studios.</p>
+    <div class="container">
+      <textarea id="code" placeholder="Insert html. . . "></textarea>
+      <button onclick="Newtab()">Emulate</button>
     </div>
-
-    <div class="projects-card">
-      <h2>Current Projects</h2>
-
-      <div class="projects-list">
-        <div class="project">
-          <h3>Html Emulator</h3>
-          <p>
-            We're making a simple html runner for unblocked games. You can paste
-            in your own .html code, and then it will run it in an about:blank
-            tab for you.
-          </p>
-        </div>
-
-        <div class="project">
-          <h3>Project Two</h3>
-          <p>Add another project and its description here.</p>
-        </div>
-      </div>
-    </div>
-
-    <button
-      onclick="
-        window.open(
-          'https://github.com/Axononymous/A-O-Studios',
-          '_blank',
-          'noopener,noreferrer',
-        )
-      "
-    >
-      Our GitHub Repository
-    </button>
+    <script>
+      function Newtab() {
+        const code = document.getElementById("code").value;
+        const NewWindow = window.open("about:blank", "_blank");
+        NewWindow.document.open();
+        NewWindow.document.write(code);
+        NewWindow.document.close();
+      }
+    </script>
   </body>
 </html>

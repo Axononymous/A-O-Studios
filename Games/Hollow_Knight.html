@@ -1,176 +1,956 @@
-
-<html lang="en-us" data-darkreader-proxy-injected="true"><head>
+<!doctype html>
+<html lang="en">
+<head>
     <base href="https://quantil.jsdelivr.net/gh/web-ports/hollow-knight@latest/">
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | Hollow Knight</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#080a12">
+    <title>Hollow Knight | Web Edition</title>
+    <link rel="preconnect" href="https://quantil.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://quantil.jsdelivr.net">
+    <link rel="preload" href="Build/hk.loader.js" as="script">
+    <link rel="preload" href="Build/hk.framework.js" as="script">
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background: #231F20;
+        :root {
+            color-scheme: dark;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #080a12;
+            color: #f4f4f8;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            --muted: #9699aa;
+            --accent: #a9d9e8;
+            --panel: rgba(17, 20, 32, .88);
         }
 
-        #unity-container {
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
             width: 100%;
             height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
+            min-height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #080a12;
         }
 
+        body { position: relative; }
+
+        #unity-container {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #080a12;
+        }
+
+        /* Unity's desktop template centers a fixed-size container by translating it.
+           This build fills the viewport instead, so cancel that transform explicitly. */
+        #unity-container.unity-desktop,
+        #unity-container.unity-mobile {
+            position: fixed;
+            inset: 0;
+            left: 0;
+            top: 0;
+            display: grid;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            place-items: center;
+            overflow: hidden;
+            transform: none;
+        }
+
+        #unity-container[hidden] { display: none !important; }
+
+        #unity-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            max-height: 100dvh;
+            object-fit: contain;
+            outline: none;
+            background: #080a12;
+        }
+
+        #unity-loading-bar { display: none !important; }
+
+        .loading-screen {
+            position: fixed;
+            z-index: 20;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            padding: 32px 24px;
+            background:
+                radial-gradient(ellipse at 50% 42%, rgba(52, 76, 105, .28), transparent 37%),
+                radial-gradient(ellipse at 50% 110%, rgba(71, 43, 91, .2), transparent 48%),
+                #080a12;
+            opacity: 1;
+            transition: opacity .8s ease, visibility .8s ease;
+        }
+
+        .loading-screen::before,
+        .loading-screen::after {
+            position: absolute;
+            inset: -40%;
+            pointer-events: none;
+            content: "";
+        }
+
+        .loading-screen::before {
+            opacity: .4;
+            background-image: radial-gradient(1px 1px at 25% 24%, #d9f1ff 98%, transparent),
+                radial-gradient(1px 1px at 66% 57%, #d9f1ff 98%, transparent),
+                radial-gradient(1px 1px at 82% 31%, #d9f1ff 98%, transparent),
+                radial-gradient(1px 1px at 42% 74%, #d9f1ff 98%, transparent),
+                radial-gradient(1px 1px at 14% 61%, #d9f1ff 98%, transparent);
+            background-size: 290px 270px, 360px 340px, 410px 370px, 330px 310px, 470px 430px;
+            animation: star-drift 70s linear infinite;
+        }
+
+        .loading-screen::after {
+            inset: 0;
+            background: linear-gradient(115deg, transparent 35%, rgba(170, 220, 241, .025) 50%, transparent 65%);
+            transform: translateX(-100%);
+            animation: light-sweep 7s ease-in-out infinite;
+        }
+
+        .loading-screen.is-hidden { visibility: hidden; opacity: 0; pointer-events: none; }
+
+        .loading-content {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 510px);
+            text-align: center;
+            animation: content-arrive .9s cubic-bezier(.2, .8, .2, 1) both;
+        }
+
+        .emblem-wrap {
+            position: relative;
+            display: grid;
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 34px;
+            place-items: center;
+        }
+
+        .emblem-orbit {
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(184, 224, 244, .18);
+            border-radius: 50%;
+            box-shadow: 0 0 38px rgba(103, 190, 220, .08), inset 0 0 28px rgba(103, 190, 220, .035);
+            animation: orbit-breathe 3.5s ease-in-out infinite;
+        }
+
+        .emblem-orbit::before,
+        .emblem-orbit::after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #c8f1ff;
+            box-shadow: 0 0 12px 3px rgba(133, 220, 248, .64);
+            content: "";
+        }
+
+        .emblem-orbit::before { transform: translate(-50%, -56px); }
+        .emblem-orbit::after { transform: translate(48px, -50%); opacity: .55; }
+
+        .emblem {
+            width: 49px;
+            height: 59px;
+            filter: drop-shadow(0 0 18px rgba(149, 221, 242, .33));
+            animation: emblem-float 3s ease-in-out infinite;
+        }
+
+        .loading-eyebrow {
+            margin: 0 0 11px;
+            color: #a9d9e8;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .34em;
+            text-transform: uppercase;
+        }
+
+        .loading-title {
+            margin: 0;
+            color: #f4f4f8;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(29px, 5vw, 39px);
+            font-weight: 400;
+            letter-spacing: .015em;
+            line-height: 1.2;
+        }
+
+        .loading-subtitle {
+            margin: 12px 0 0;
+            color: #a4a8b8;
+            font-size: 13px;
+            letter-spacing: .025em;
+        }
+
+        .progress-area { margin-top: 43px; text-align: left; }
+
+        .progress-track {
+            position: relative;
+            height: 4px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, .11);
+            box-shadow: 0 0 18px rgba(126, 205, 231, .06);
+        }
+
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #77b9d1, #e1f8ff 55%, #9ed7e8);
+            box-shadow: 0 0 15px rgba(151, 222, 245, .65);
+            transition: width .22s ease-out;
+        }
+
+        .progress-fill.is-indeterminate {
+            width: 35%;
+            animation: progress-scan 1.55s cubic-bezier(.65, 0, .35, 1) infinite;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 14px;
+            color: #d6d8e2;
+            font-size: 11px;
+            letter-spacing: .035em;
+        }
+
+        #loading-bytes { color: #9297a9; text-align: right; }
+        .loading-detail { min-height: 20px; margin: 17px 0 0; color: #767c8e; font-size: 11px; }
+
+        .retry-button {
+            display: none;
+            margin: 20px auto 0;
+            padding: 10px 17px;
+            border: 1px solid rgba(169, 217, 232, .38);
+            border-radius: 999px;
+            background: rgba(169, 217, 232, .1);
+            color: #e8f9ff;
+            font: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background .2s ease, border-color .2s ease, transform .2s ease;
+        }
+
+        .retry-button:hover { transform: translateY(-1px); border-color: #a9d9e8; background: rgba(169, 217, 232, .17); }
+        .retry-button.is-visible { display: inline-flex; }
+
+        .settings-button {
+            position: fixed;
+            z-index: 40;
+            top: max(18px, env(safe-area-inset-top));
+            right: max(18px, env(safe-area-inset-right));
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .13);
+            border-radius: 14px;
+            background: rgba(15, 18, 28, .72);
+            color: #e9edf5;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .24);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            cursor: pointer;
+            transition: transform .2s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .settings-button:hover,
+        .settings-button[aria-expanded="true"] {
+            transform: translateY(-1px);
+            border-color: rgba(169, 217, 232, .48);
+            background: rgba(27, 34, 48, .9);
+        }
+
+        .settings-button:focus-visible,
+        .retry-button:focus-visible,
+        select:focus-visible { outline: 2px solid #a9d9e8; outline-offset: 3px; }
+
+        .settings-panel {
+            position: fixed;
+            z-index: 41;
+            top: max(70px, calc(env(safe-area-inset-top) + 52px));
+            right: max(18px, env(safe-area-inset-right));
+            width: min(300px, calc(100vw - 36px));
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 18px;
+            background: var(--panel);
+            box-shadow: 0 18px 58px rgba(0, 0, 0, .42), inset 0 1px rgba(255, 255, 255, .045);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            animation: panel-arrive .2s ease-out both;
+        }
+
+        .settings-panel[hidden] { display: none; }
+        .settings-heading { margin: 0; font-size: 14px; font-weight: 650; letter-spacing: .01em; }
+        .settings-caption { margin: 5px 0 18px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+        .setting-label { display: block; margin-bottom: 8px; color: #d9dce7; font-size: 11px; font-weight: 600; }
+
+        .resolution-select {
+            width: 100%;
+            min-height: 42px;
+            padding: 0 12px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 10px;
+            background: #171b28;
+            color: #f4f4f8;
+            font: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .resolution-note { min-height: 16px; margin: 9px 0 0; color: #9096a8; font-size: 10px; }
+
+        .settings-watermark {
+            margin: 19px 0 0;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, .09);
+            color: #a9d9e8;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-align: center;
+        }
+
+        #unity-mobile-warning {
+            position: fixed;
+            z-index: 5;
+            right: 14px;
+            bottom: max(14px, env(safe-area-inset-bottom));
+            display: none;
+            max-width: calc(100vw - 28px);
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 10px;
+            background: rgba(15, 18, 28, .82);
+            color: #f4f4f8;
+            font-size: 12px;
+        }
+
+        @keyframes star-drift { to { transform: translate3d(4%, -3%, 0); } }
+        @keyframes light-sweep { 0%, 35% { transform: translateX(-100%); } 72%, 100% { transform: translateX(100%); } }
+        @keyframes orbit-breathe { 0%, 100% { transform: scale(.94); opacity: .65; } 50% { transform: scale(1.04); opacity: 1; } }
+        @keyframes emblem-float { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-3px); } }
+        @keyframes progress-scan { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }
+        @keyframes content-arrive { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes panel-arrive { from { transform: translateY(-5px) scale(.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+        @media (max-width: 520px) {
+            .loading-screen { padding: 24px 22px; }
+            .emblem-wrap { width: 90px; height: 90px; margin-bottom: 27px; }
+            .emblem-orbit::before { transform: translate(-50%, -45px); }
+            .emblem-orbit::after { transform: translate(39px, -50%); }
+            .emblem { width: 41px; height: 50px; }
+            .progress-area { margin-top: 34px; }
+            .progress-meta { font-size: 10px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
     </style>
 </head>
-
 <body>
-    <div id="loading-text" style="color: white; font-size: 48px; font-family: cursive; text-align: center; margin-top: 20px; --darkreader-inline-color: var(--darkreader-text-ffffff, #e8e6e3);" data-darkreader-inline-color="">LOADING... 148.30 MB / 860.36 MB</div>
-    <div hidden="" id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas"></canvas>
-        <div id="unity-loading-bar">
-            <div id="unity-logo"></div>
-            <div id="unity-progress-bar-empty">
-                <div id="unity-progress-bar-full"></div>
-            </div>
-        </div>
-        <div id="unity-mobile-warning"> WebGL builds are not supported on mobile devices. </div>
+    <div id="unity-container" class="unity-desktop" hidden>
+        <canvas id="unity-canvas" tabindex="-1" aria-label="Hollow Knight game"></canvas>
+        <div id="unity-mobile-warning">WebGL builds may not be supported on some mobile devices.</div>
     </div>
-    <script>
-        var loadingText = document.querySelector("#loading-text");
-        let totalBytes = 0;
-        let loadedBytes = 0;
-        async function getSize(url) {
-            try {
-                const res = await fetch(url, {
-                    method: "HEAD"
-                });
-                return parseInt(res.headers.get("Content-Length") || "0", 10);
-            } catch {
-                return 0;
-            }
-        }
-        async function fetchWithProgress(url) {
-            const response = await fetch(url);
-            const reader = response.body.getReader();
-            let chunks = [];
-            let received = 0;
-            while (true) {
-                const {
-                    done,
-                    value
-                } = await reader.read();
-                if (done) break;
-                received += value.length;
-                loadedBytes += value.length;
-                chunks.push(value);
-                let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
-                let mbTotal = '860.36';
-                loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
-            }
-            let fullBuffer = new Uint8Array(received);
-            let offset = 0;
-            for (let chunk of chunks) {
-                fullBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
-            return fullBuffer.buffer;
-        }
-        async function mergeFiles(fileParts) {
-            const buffers = await Promise.all(fileParts.map(part => fetchWithProgress(part)));
-            const mergedBlob = new Blob(buffers);
-            return URL.createObjectURL(mergedBlob);
-        }
 
-        function getParts(file, start, end) {
-            let parts = [];
-            for (let i = start; i <= end; i++) {
-                parts.push(file + ".part" + i);
-            }
-            return parts;
-        }
-        (async () => {
-            const allParts = [...getParts("Build/hk.data", 1, 42), ...getParts("Build/hk.wasm", 1, 2), ];
-            const sizes = await Promise.all(allParts.map(getSize));
-            totalBytes = sizes.reduce((a, b) => a + b, 0);
-            const [dataUrl, wasmurl] = await Promise.all([
-                mergeFiles(getParts("Build/hk.data", 1, 42)),
-                mergeFiles(getParts("Build/hk.wasm", 1, 2)),
-            ]);
-            var buildUrl = "Build";
-            var loaderUrl = buildUrl + "/hk.loader.js";
-            var config = {
-                dataUrl: dataUrl,
-                frameworkUrl: buildUrl + "/hk.framework.js",
-                codeUrl: wasmurl,
+    <section id="loading-screen" class="loading-screen" aria-live="polite" aria-busy="true">
+        <div class="loading-content">
+            <div class="emblem-wrap" aria-hidden="true">
+                <div class="emblem-orbit"></div>
+                <svg class="emblem" viewBox="0 0 64 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 23C11 17 8 10 10 4C18 6 24 11 27 19C29 15 32 12 36 10C40 13 43 17 44 22C49 17 54 15 59 16C58 23 54 29 47 33L49 48C48 61 41 69 32 72C23 69 16 61 15 48L17 33C12 30 8 24 7 18C11 18 15 20 18 23Z" fill="#E8F5FA"/>
+                    <path d="M23 42C25 39 28 38 32 38C36 38 39 39 41 42C38 45 35 47 32 47C29 47 26 45 23 42Z" fill="#17202B"/>
+                    <path d="M18 54C21 61 26 65 32 67C38 65 43 61 46 54" stroke="#9FD6E7" stroke-width="1.5" stroke-linecap="round" opacity=".72"/>
+                </svg>
+            </div>
+            <p class="loading-eyebrow">A journey below</p>
+            <h1 id="loading-title" class="loading-title">Preparing your descent</h1>
+            <p id="loading-subtitle" class="loading-subtitle">The kingdom is coming into focus.</p>
+            <div class="progress-area">
+                <div class="progress-track" role="progressbar" aria-label="Game loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div id="loading-progress" class="progress-fill is-indeterminate"></div>
+                </div>
+                <div class="progress-meta">
+                    <span id="loading-status">Preparing game files</span>
+                    <span id="loading-bytes">0.00 MB / 860.36 MB</span>
+                </div>
+            </div>
+            <p id="loading-detail" class="loading-detail">Large game files are fetched in parallel without an extra full-size typed-array copy.</p>
+            <button id="retry-button" class="retry-button" type="button">Retry download</button>
+        </div>
+    </section>
+
+    <button id="settings-button" class="settings-button" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="settings-panel" title="Settings">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z" stroke="currentColor" stroke-width="1.6"/>
+            <path d="m19.4 13.5 1.1.9-1.6 2.8-1.4-.5a7.9 7.9 0 0 1-1.5.9l-.2 1.5h-3.2l-.3-1.5a7.9 7.9 0 0 1-1.5-.9l-1.4.5-1.6-2.8 1.1-.9a7.6 7.6 0 0 1 0-1.8l-1.1-.9 1.6-2.8 1.4.5a7.9 7.9 0 0 1 1.5-.9l.3-1.5h3.2l.2 1.5a7.9 7.9 0 0 1 1.5.9l1.4-.5 1.6 2.8-1.1.9a7.6 7.6 0 0 1 0 1.8Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/>
+        </svg>
+    </button>
+
+    <aside id="settings-panel" class="settings-panel" aria-label="Game settings" hidden>
+        <h2 class="settings-heading">Display settings</h2>
+        <p class="settings-caption">Choose the game's render resolution. Lower settings can improve performance on slower devices.</p>
+        <label class="setting-label" for="resolution-select">Render resolution</label>
+        <select id="resolution-select" class="resolution-select">
+            <option value="240">240p · Performance</option>
+            <option value="360">360p</option>
+            <option value="480">480p</option>
+            <option value="720">720p · Balanced</option>
+            <option value="900">900p</option>
+            <option value="1080">1080p · High quality</option>
+        </select>
+        <p id="resolution-note" class="resolution-note">Render target: —</p>
+        <p id="storage-note" class="resolution-note">Game files can be saved in this browser for quicker relaunches.</p>
+        <p class="settings-watermark">Property of A&amp;O Studios</p>
+    </aside>
+
+    <script>
+        (() => {
+            "use strict";
+
+            const BUILD_URL = "Build";
+            const PART_CONCURRENCY = 6;
+            const MAX_ATTEMPTS = 3;
+            const FALLBACK_TOTAL_BYTES = 860.36 * 1024 * 1024;
+            const CACHE_DB_NAME = "hollow-knight-downloads";
+            const CACHE_STORE_NAME = "game-parts";
+            const CACHE_DB_VERSION = 1;
+            const UNVERIFIED_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+            const RESOLUTION_STORAGE_KEY = "hollow-knight-render-resolution";
+            const RESOLUTIONS = [240, 360, 480, 720, 900, 1080];
+            const parts = [
+                ...getParts("Build/hk.data", 1, 42),
+                ...getParts("Build/hk.wasm", 1, 2)
+            ];
+
+            const container = document.getElementById("unity-container");
+            const canvas = document.getElementById("unity-canvas");
+            const mobileWarning = document.getElementById("unity-mobile-warning");
+            const loadingScreen = document.getElementById("loading-screen");
+            const loadingTitle = document.getElementById("loading-title");
+            const loadingSubtitle = document.getElementById("loading-subtitle");
+            const loadingStatus = document.getElementById("loading-status");
+            const loadingBytes = document.getElementById("loading-bytes");
+            const loadingDetail = document.getElementById("loading-detail");
+            const loadingProgress = document.getElementById("loading-progress");
+            const progressTrack = loadingProgress.parentElement;
+            const retryButton = document.getElementById("retry-button");
+            const settingsButton = document.getElementById("settings-button");
+            const settingsPanel = document.getElementById("settings-panel");
+            const resolutionSelect = document.getElementById("resolution-select");
+            const resolutionNote = document.getElementById("resolution-note");
+            const storageNote = document.getElementById("storage-note");
+
+            const downloadedByPart = new Map();
+            const expectedByPart = new Map();
+            let progressFramePending = false;
+            let downloadPhaseComplete = false;
+            let unityInstance = null;
+            let dataObjectUrl = null;
+            let wasmObjectUrl = null;
+            let cacheWritesEnabled = true;
+            let savedPartCount = 0;
+
+            const config = {
+                dataUrl: "",
+                frameworkUrl: BUILD_URL + "/hk.framework.js",
+                codeUrl: "",
                 streamingAssetsUrl: "StreamingAssets",
                 companyName: "Team Cherry & Truffled",
                 productName: "Hollow Knight",
                 productVersion: "1.0",
+                // Canvas dimensions are managed below so the resolution selector also works in-game.
+                matchWebGLToCanvasSize: false
             };
-            var container = document.querySelector("#unity-container");
-            container.hidden = false;
-            var canvas = document.querySelector("#unity-canvas");
-            var loadingBar = document.querySelector("#unity-loading-bar");
-            var progressBarFull = document.querySelector("#unity-progress-bar-full");
-            var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-            var mobileWarning = document.querySelector("#unity-mobile-warning");
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                container.className = "unity-mobile";
-                config.devicePixelRatio = 1;
-                mobileWarning.style.display = "block";
-                setTimeout(() => {
-                    mobileWarning.style.display = "none";
-                }, 5000);
-            } else {
-              if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                var meta = document.createElement('meta');
-                meta.name = 'viewport';
-                meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-                document.getElementsByTagName('head')[0].appendChild(meta);
-                container.className = "unity-mobile";
-                canvas.className = "unity-mobile";
-            } else {
-                function resizeCanvas() {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    canvas.style.width = window.innerWidth + "px";
-                    canvas.style.height = window.innerHeight + "px";
+
+            let selectedResolution = getSavedResolution();
+            resolutionSelect.value = String(selectedResolution);
+
+            function getParts(file, start, end) {
+                return Array.from({ length: end - start + 1 }, (_, index) => `${file}.part${start + index}`);
+            }
+
+            function getSavedResolution() {
+                try {
+                    const saved = Number(localStorage.getItem(RESOLUTION_STORAGE_KEY));
+                    return RESOLUTIONS.includes(saved) ? saved : 720;
+                } catch {
+                    return 720;
                 }
-                resizeCanvas();
-                window.addEventListener('resize', resizeCanvas);
             }
+
+            function formatMegabytes(bytes) {
+                return `${(Math.max(0, bytes) / (1024 * 1024)).toFixed(2)} MB`;
             }
-            loadingBar.style.display = "block";
-            var script = document.createElement("script");
-            script.src = loaderUrl;
-            script.onload = () => {
-                createUnityInstance(canvas, config, (progress) => {
-                    progressBarFull.style.width = 100 * progress + "%";
-                }).then((unityInstance) => {
-                  loadingText.remove();
-                    loadingBar.style.display = "none";
-                    canvas.style.display = "block";
-                }).catch((message) => {
-                    alert(message);
+
+            function getLoadedBytes() {
+                return Array.from(downloadedByPart.values()).reduce((sum, value) => sum + value, 0);
+            }
+
+            function getTotalBytes() {
+                const measuredTotal = Array.from(expectedByPart.values()).reduce((sum, value) => sum + value, 0);
+                return expectedByPart.size === parts.length && measuredTotal > 0
+                    ? measuredTotal
+                    : FALLBACK_TOTAL_BYTES;
+            }
+
+            function openAssetDatabase() {
+                return new Promise(resolve => {
+                    try {
+                        if (!window.indexedDB) {
+                            resolve(null);
+                            return;
+                        }
+
+                        const request = window.indexedDB.open(CACHE_DB_NAME, CACHE_DB_VERSION);
+                        request.onupgradeneeded = () => {
+                            const database = request.result;
+                            if (!database.objectStoreNames.contains(CACHE_STORE_NAME)) {
+                                database.createObjectStore(CACHE_STORE_NAME, { keyPath: "key" });
+                            }
+                        };
+                        request.onsuccess = () => {
+                            const database = request.result;
+                            database.onversionchange = () => database.close();
+                            try {
+                                if (navigator.storage && navigator.storage.persist) {
+                                    navigator.storage.persist().catch(() => {});
+                                }
+                            } catch { /* Persistent storage is best-effort. */ }
+                            resolve(database);
+                        };
+                        request.onerror = () => resolve(null);
+                        request.onblocked = () => resolve(null);
+                    } catch {
+                        resolve(null);
+                    }
                 });
-            };
-            document.body.appendChild(script);
+            }
+
+            function getAssetKey(url) {
+                return new URL(url, document.baseURI).href;
+            }
+
+            function parseContentLength(value) {
+                if (value === null) return null;
+                const size = Number(value);
+                return Number.isFinite(size) && size >= 0 ? size : null;
+            }
+
+            function readCachedRecords(database) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const transaction = database.transaction(CACHE_STORE_NAME, "readonly");
+                        const request = transaction.objectStore(CACHE_STORE_NAME).getAll();
+                        request.onsuccess = () => resolve(request.result || []);
+                        request.onerror = () => reject(request.error);
+                        transaction.onabort = () => reject(transaction.error);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+
+            function cachedRecordMatches(record, response) {
+                const etag = response.headers.get("ETag");
+                const lastModified = response.headers.get("Last-Modified");
+                const contentLength = parseContentLength(response.headers.get("Content-Length"));
+                let hasValidator = false;
+
+                if (record.etag && etag) {
+                    hasValidator = true;
+                    if (record.etag !== etag) return false;
+                }
+                if (record.lastModified && lastModified) {
+                    hasValidator = true;
+                    if (record.lastModified !== lastModified) return false;
+                }
+                if (contentLength !== null) {
+                    const savedLength = record.contentLength === null || record.contentLength === undefined
+                        ? record.size
+                        : record.contentLength;
+                    if (savedLength !== contentLength) return false;
+                }
+
+                return hasValidator || Date.now() - record.savedAt <= UNVERIFIED_CACHE_TTL_MS;
+            }
+
+            async function restoreCachedAssets(database) {
+                let records;
+                try {
+                    records = await readCachedRecords(database);
+                } catch {
+                    return null;
+                }
+
+                const recordsByKey = new Map(records.map(record => [record.key, record]));
+                const orderedRecords = parts.map(url => recordsByKey.get(getAssetKey(url)));
+                const cachedIndexes = orderedRecords
+                    .map((record, index) => record && record.blob instanceof Blob ? index : -1)
+                    .filter(index => index >= 0);
+                if (cachedIndexes.length === 0) return null;
+
+                setLoadingStage("Restoring your descent", "Checking the saved game files.", "Verifying local files");
+                loadingDetail.textContent = "Checking saved game chunks in this browser.";
+
+                let cursor = 0;
+                const blobs = new Array(parts.length).fill(null);
+                const workers = Array.from({ length: Math.min(PART_CONCURRENCY, cachedIndexes.length) }, async () => {
+                    while (cursor < cachedIndexes.length) {
+                        const index = cachedIndexes[cursor++];
+                        try {
+                            const response = await fetch(parts[index], { method: "HEAD", cache: "no-cache" });
+                            if ((response.status === 404 || response.status === 410) ||
+                                (response.ok && !cachedRecordMatches(orderedRecords[index], response))) continue;
+                            blobs[index] = orderedRecords[index].blob;
+                        } catch {
+                            // Reuse saved parts when offline or when the CDN cannot validate them.
+                            blobs[index] = orderedRecords[index].blob;
+                        }
+                    }
+                });
+                await Promise.all(workers);
+
+                let restoredCount = 0;
+                blobs.forEach((blob, index) => {
+                    if (!blob) return;
+                    restoredCount += 1;
+                    const size = blob.size;
+                    downloadedByPart.set(parts[index], size);
+                    expectedByPart.set(parts[index], size);
+                });
+                if (restoredCount === 0) return null;
+                savedPartCount = restoredCount;
+                storageNote.textContent = restoredCount === parts.length
+                    ? "Saved game files found in this browser for quicker relaunches."
+                    : `Restored ${restoredCount}/${parts.length} saved chunks; downloading the rest.`;
+                return blobs;
+            }
+
+            function writeCachedAsset(database, url, blob, response) {
+                return new Promise(resolve => {
+                    try {
+                        const transaction = database.transaction(CACHE_STORE_NAME, "readwrite");
+                        transaction.oncomplete = () => resolve(true);
+                        transaction.onerror = () => resolve(false);
+                        transaction.onabort = () => resolve(false);
+                        transaction.objectStore(CACHE_STORE_NAME).put({
+                            key: getAssetKey(url),
+                            blob,
+                            size: blob.size,
+                            contentLength: parseContentLength(response.headers.get("Content-Length")),
+                            etag: response.headers.get("ETag"),
+                            lastModified: response.headers.get("Last-Modified"),
+                            savedAt: Date.now()
+                        });
+                    } catch {
+                        resolve(false);
+                    }
+                });
+            }
+
+            async function saveDownloadedAsset(database, url, blob, response) {
+                if (!database || !cacheWritesEnabled) return;
+                const saved = await writeCachedAsset(database, url, blob, response);
+                if (saved) {
+                    savedPartCount += 1;
+                    storageNote.textContent = `Saving game files locally · ${savedPartCount}/${parts.length} chunks`;
+                } else {
+                    cacheWritesEnabled = false;
+                    storageNote.textContent = "Browser storage is full or unavailable; files may need to be downloaded again.";
+                }
+            }
+
+            function applyRenderResolution() {
+                const viewportWidth = Math.max(1, window.innerWidth);
+                const viewportHeight = Math.max(1, window.innerHeight);
+                const pixelRatio = selectedResolution / viewportHeight;
+                const renderWidth = Math.max(1, Math.round(viewportWidth * pixelRatio));
+                const renderHeight = Math.max(1, Math.round(viewportHeight * pixelRatio));
+
+                // Unity uses this ratio when creating and resizing its WebGL drawing buffer.
+                config.devicePixelRatio = pixelRatio;
+                canvas.style.width = `${viewportWidth}px`;
+                canvas.style.height = `${viewportHeight}px`;
+
+                // Also update the backing buffer directly so changing the setting takes effect
+                // immediately, including after Unity has already started.
+                if (canvas.width !== renderWidth) canvas.width = renderWidth;
+                if (canvas.height !== renderHeight) canvas.height = renderHeight;
+                resolutionNote.textContent = `Render target: ${renderWidth} × ${renderHeight}`;
+            }
+
+            function setProgress(percent, indeterminate = false) {
+                loadingProgress.classList.toggle("is-indeterminate", indeterminate);
+                progressTrack.setAttribute("aria-valuenow", String(Math.max(0, Math.min(100, Math.round(percent)))));
+                if (!indeterminate) loadingProgress.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+            }
+
+            function updateDownloadProgress() {
+                progressFramePending = false;
+                if (downloadPhaseComplete) return;
+                const loaded = getLoadedBytes();
+                const total = getTotalBytes();
+                // Reserve the final part of the bar for Unity's own initialization phase.
+                setProgress(Math.min(82, (loaded / total) * 82));
+                loadingBytes.textContent = `${formatMegabytes(loaded)} / ${formatMegabytes(total)}`;
+            }
+
+            function scheduleProgressUpdate() {
+                if (progressFramePending) return;
+                progressFramePending = true;
+                requestAnimationFrame(updateDownloadProgress);
+            }
+
+            function setPartExpectedSize(url, size) {
+                if (Number.isFinite(size) && size >= 0) expectedByPart.set(url, size);
+                scheduleProgressUpdate();
+            }
+
+            async function fetchPart(url, signal, database) {
+                let lastError;
+
+                for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+                    try {
+                        downloadedByPart.set(url, 0);
+                        const response = await fetch(url, { cache: "default", signal });
+                        if (!response.ok || response.status !== 200) {
+                            throw new Error(`Request failed (${response.status}) for ${url}`);
+                        }
+
+                        const lengthHeader = response.headers.get("Content-Length");
+                        const contentLength = lengthHeader === null ? Number.NaN : Number(lengthHeader);
+                        if (Number.isFinite(contentLength) && contentLength >= 0) setPartExpectedSize(url, contentLength);
+                        else expectedByPart.delete(url);
+
+                        const chunks = [];
+                        let received = 0;
+                        if (response.body && response.body.getReader) {
+                            const reader = response.body.getReader();
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) break;
+                                chunks.push(value);
+                                received += value.byteLength;
+                                downloadedByPart.set(url, received);
+                                scheduleProgressUpdate();
+                            }
+                        } else {
+                            const blob = await response.blob();
+                            received = blob.size;
+                            downloadedByPart.set(url, received);
+                            if (!expectedByPart.has(url)) setPartExpectedSize(url, received);
+                            scheduleProgressUpdate();
+                            await saveDownloadedAsset(database, url, blob, response);
+                            return blob;
+                        }
+
+                        if (!expectedByPart.has(url)) setPartExpectedSize(url, received);
+                        scheduleProgressUpdate();
+                        const blob = new Blob(chunks, { type: response.headers.get("Content-Type") || "application/octet-stream" });
+                        await saveDownloadedAsset(database, url, blob, response);
+                        return blob;
+                    } catch (error) {
+                        lastError = error;
+                        if (signal.aborted) throw error;
+                        if (attempt < MAX_ATTEMPTS) {
+                            loadingStatus.textContent = `Reconnecting · attempt ${attempt + 1} of ${MAX_ATTEMPTS}`;
+                            await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+                        }
+                    }
+                }
+
+                throw lastError || new Error(`Unable to download ${url}`);
+            }
+
+            async function downloadAllParts(database, existingParts = null) {
+                const controller = new AbortController();
+                const downloaded = existingParts ? existingParts.slice() : new Array(parts.length);
+                let cursor = 0;
+
+                const workers = Array.from({ length: Math.min(PART_CONCURRENCY, parts.length) }, async () => {
+                    while (cursor < parts.length) {
+                        const index = cursor++;
+                        if (downloaded[index]) continue;
+                        try {
+                            downloaded[index] = await fetchPart(parts[index], controller.signal, database);
+                        } catch (error) {
+                            controller.abort();
+                            throw error;
+                        }
+                    }
+                });
+
+                await Promise.all(workers);
+                return downloaded;
+            }
+
+            function setLoadingStage(title, subtitle, status) {
+                loadingTitle.textContent = title;
+                loadingSubtitle.textContent = subtitle;
+                loadingStatus.textContent = status;
+            }
+
+            function showLoadError(error) {
+                downloadPhaseComplete = true;
+                setLoadingStage("The descent was interrupted", "Some game files couldn't be reached.", "Download paused");
+                loadingDetail.textContent = error && error.message ? error.message : "Check your connection, then try again.";
+                loadingBytes.textContent = `${formatMegabytes(getLoadedBytes())} / ${formatMegabytes(getTotalBytes())}`;
+                setProgress(Math.min(82, (getLoadedBytes() / getTotalBytes()) * 82));
+                retryButton.classList.add("is-visible");
+                loadingScreen.setAttribute("aria-busy", "false");
+            }
+
+            async function startGame() {
+                try {
+                    setLoadingStage("Preparing your descent", "The kingdom is coming into focus.", "Checking local storage");
+                    loadingDetail.textContent = "Checking this browser for a saved copy of the game.";
+                    const database = await openAssetDatabase();
+                    if (!database) {
+                        storageNote.textContent = "Local browser storage is unavailable; game files may need to be downloaded again.";
+                    } else {
+                        storageNote.textContent = "Checking for saved game files in this browser.";
+                    }
+
+                    const cachedParts = database ? await restoreCachedAssets(database) : null;
+                    let downloadedParts;
+                    if (cachedParts) {
+                        const restoredCount = savedPartCount;
+                        setLoadingStage(
+                            restoredCount === parts.length ? "Restoring your descent" : "Resuming your descent",
+                            "The kingdom is coming into focus.",
+                            restoredCount === parts.length ? "Loading saved files" : `Reusing ${restoredCount} saved chunks`
+                        );
+                        loadingDetail.textContent = restoredCount === parts.length
+                            ? "Using the locally saved game files."
+                            : "Using saved chunks and downloading only the missing files.";
+                        downloadedParts = await downloadAllParts(database, cachedParts);
+                    } else {
+                        setLoadingStage("Preparing your descent", "The kingdom is coming into focus.", "Downloading game files");
+                        loadingDetail.textContent = database
+                            ? "Downloading the game and saving its files locally for next time."
+                            : "Fetching optimized chunks with limited parallel requests.";
+                        downloadedParts = await downloadAllParts(database);
+                    }
+                    if (database && cacheWritesEnabled && savedPartCount === parts.length) {
+                        storageNote.textContent = "Game files saved in this browser for quicker relaunches.";
+                    }
+                    downloadPhaseComplete = true;
+
+                    setLoadingStage("Entering Hallownest", "Almost there. The game is initializing.", "Starting Unity runtime");
+                    loadingDetail.textContent = "Assembling downloaded parts and preparing the WebGL renderer.";
+                    setProgress(84);
+                    loadingBytes.textContent = `${formatMegabytes(getLoadedBytes())} / ${formatMegabytes(getTotalBytes())}`;
+
+                    const dataParts = downloadedParts.slice(0, 42);
+                    const wasmParts = downloadedParts.slice(42);
+                    dataObjectUrl = URL.createObjectURL(new Blob(dataParts, { type: "application/octet-stream" }));
+                    wasmObjectUrl = URL.createObjectURL(new Blob(wasmParts, { type: "application/wasm" }));
+                    config.dataUrl = dataObjectUrl;
+                    config.codeUrl = wasmObjectUrl;
+
+                    applyRenderResolution();
+                    container.hidden = false;
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                        mobileWarning.style.display = "block";
+                        window.setTimeout(() => { mobileWarning.style.display = "none"; }, 5000);
+                    }
+
+                    const loaderScript = document.createElement("script");
+                    loaderScript.src = `${BUILD_URL}/hk.loader.js`;
+                    loaderScript.async = true;
+                    loaderScript.onerror = () => showLoadError(new Error("The Unity loader could not be downloaded."));
+                    loaderScript.onload = async () => {
+                        try {
+                            unityInstance = await createUnityInstance(canvas, config, progress => {
+                                const totalProgress = 84 + Math.max(0, Math.min(1, progress)) * 16;
+                                setProgress(totalProgress);
+                                loadingStatus.textContent = progress >= 1 ? "Ready" : `Initializing game · ${Math.round(progress * 100)}%`;
+                                loadingBytes.textContent = `${formatMegabytes(getLoadedBytes())} / ${formatMegabytes(getTotalBytes())}`;
+                            });
+
+                            loadingScreen.setAttribute("aria-busy", "false");
+                            setProgress(100);
+                            loadingStatus.textContent = "Ready";
+                            loadingSubtitle.textContent = "Welcome to Hallownest.";
+                            canvas.focus({ preventScroll: true });
+                            window.setTimeout(() => loadingScreen.classList.add("is-hidden"), 250);
+                            window.setTimeout(() => {
+                                if (dataObjectUrl) URL.revokeObjectURL(dataObjectUrl);
+                                if (wasmObjectUrl) URL.revokeObjectURL(wasmObjectUrl);
+                                dataObjectUrl = wasmObjectUrl = null;
+                            }, 1200);
+                        } catch (error) {
+                            showLoadError(error);
+                        }
+                    };
+                    document.head.appendChild(loaderScript);
+                } catch (error) {
+                    showLoadError(error);
+                }
+            }
+
+            settingsButton.addEventListener("click", () => {
+                const isOpen = settingsButton.getAttribute("aria-expanded") === "true";
+                settingsButton.setAttribute("aria-expanded", String(!isOpen));
+                settingsButton.setAttribute("aria-label", isOpen ? "Open settings" : "Close settings");
+                settingsPanel.hidden = isOpen;
+                if (!isOpen) resolutionSelect.focus({ preventScroll: true });
+            });
+
+            resolutionSelect.addEventListener("change", () => {
+                const value = Number(resolutionSelect.value);
+                if (!RESOLUTIONS.includes(value)) return;
+                selectedResolution = value;
+                try { localStorage.setItem(RESOLUTION_STORAGE_KEY, String(value)); } catch { /* Storage can be disabled. */ }
+                applyRenderResolution();
+            });
+
+            document.addEventListener("pointerdown", event => {
+                if (!settingsPanel.hidden && !settingsPanel.contains(event.target) && !settingsButton.contains(event.target)) {
+                    settingsPanel.hidden = true;
+                    settingsButton.setAttribute("aria-expanded", "false");
+                    settingsButton.setAttribute("aria-label", "Open settings");
+                }
+            });
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape" && !settingsPanel.hidden) {
+                    settingsPanel.hidden = true;
+                    settingsButton.setAttribute("aria-expanded", "false");
+                    settingsButton.setAttribute("aria-label", "Open settings");
+                    settingsButton.focus();
+                }
+            });
+
+            retryButton.addEventListener("click", () => window.location.reload());
+            window.addEventListener("resize", applyRenderResolution, { passive: true });
+            applyRenderResolution();
+            startGame();
         })();
     </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1G5FDBHKY0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-1G5FDBHKY0');
-</script>
-
-
-
-</body></html>
+</body>
+</html>

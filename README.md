@@ -1,5 +1,3 @@
-<img width="125" height="100" alt="A O" style="border-radius= 24px;" src="https://github.com/user-attachments/assets/76cdecf0-daa3-4c8a-b6bd-8f4e5f84d5fb"/> 
-
 ## Overview
 
 A&O Studios is a small web development team created by **Axononymous** and **OddDuckling12**. We're learning HTML, CSS, and overall web development by building a variety of special games and tools.

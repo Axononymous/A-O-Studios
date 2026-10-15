@@ -1,0 +1,140 @@
+<!-- Downloaded from unblockedzone. join discord.gg/v66D3fn4kD for 100+ links -->
+<html lang="en-us"><head></head><body><module>
+<moduleprefs title="Google.com">
+<content type="html"><!--[CDATA[
+
+<!DOCTYPE html-->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>google.com</title>
+    <link rel="stylesheet" href="https://quantil.jsdelivr.net/gh/images-classroom-sources/ok@main/style.css">
+    <!-- GameMonetize SDK Entegrasyonu -->
+    <script id="gamemonetize-sdk" src="https://quantil.jsdelivr.net/gh/testamalame/sef@main/sedk.js"></script><script type="text/javascript">
+        window.SDK_OPTIONS = {
+            gameId: "jp112o3o4hzgrnc7zaewjkrfk282pul8",
+            onEvent: function (a) {
+                switch (a.name) {
+                    case "SDK_GAME_PAUSE":
+                        console.log("Oyun duraklatıldı, ses kapatılıyor...");
+                        if (typeof window.unityInstance !== 'undefined' && window.unityInstance) {
+                            window.unityInstance.SendMessage('AudioManager', 'MuteAudio');
+                        }
+                        break;
+                    case "SDK_GAME_START":
+                        console.log("Reklam bitti, oyun devam ediyor...");
+                        if (typeof window.unityInstance !== 'undefined' && window.unityInstance) {
+                            window.unityInstance.SendMessage('AudioManager', 'UnmuteAudio');
+                        }
+                        break;
+                    case "SDK_READY":
+                        console.log("SDK hazır.");
+                        break;
+                }
+            }
+        };
+        (function (a, b, c) {
+            var d = a.getElementsByTagName(b)[0];
+            a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://quantil.jsdelivr.net/gh/testamalame/sef@main/sedk.js", d.parentNode.insertBefore(a, d));
+        })(document, "script", "gamemonetize-sdk");
+    </script>
+
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" style="cursor: default;" width="2752" height="1744"></canvas>
+    </div>
+    <div id="loading-cover" style="display: none;">
+        <div id="unity-loading-bar">
+            <div id="unity-logo"><img src="https://quantil.jsdelivr.net/gh/matheveryday25/math@main/UNBL0CKEDZ0NE%20in%20Text.png"></div>
+            <div class="progress-spinner-container">
+                <div class="spinner-left"><img src="https://quantil.jsdelivr.net/gh/matheveryday25/math@main/UB.png"></div>
+                <div id="unity-progress-bar-empty">
+                    <div id="unity-progress-bar-full" style="width: 100%;"></div>
+                </div>
+                <div class="spinner-right"><img src="https://quantil.jsdelivr.net/gh/matheveryday25/math@main/UB.png"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const buildUrl = "https://quantil.jsdelivr.net/gh/images-classroom-sources/ok@main/Build";
+        const loaderUrl = buildUrl + "/v111.loader.js";
+        const config = {
+            dataUrl: buildUrl + "/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
+            frameworkUrl: buildUrl + "/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
+            codeUrl: buildUrl + "/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "Ericetto",
+            productName: "Ragdoll Archers",
+            productVersion: "0.1",
+        };
+
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+
+        let isAdShown = false;
+
+        function showAdOnClick() {
+            if (!isAdShown && typeof sdk !== 'undefined' && typeof sdk.showBanner !== 'undefined') {
+                sdk.showBanner();
+                isAdShown = true;
+                console.log("Reklam çağrıldı.");
+            } else {
+                console.warn("SDK veya showBanner tanımlı değil.");
+            }
+        }
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            container.className = "unity-mobile";
+        }
+        
+        loadingCover.style.display = "";
+
+        const unityLoader = document.createElement("script");
+        unityLoader.src = loaderUrl;
+        unityLoader.onload = () => {
+            createUnityInstance(canvas, config, (progress) => {
+                progressBarEmpty.style.display = "";
+                progressBarFull.style.width = `${100 * progress}%`;
+            }).then((unityInstance) => {
+                window.unityInstance = unityInstance;
+                loadingCover.style.display = "none";
+                // Oyun yüklendiğinde tıklama olayını ekle
+                canvas.addEventListener('pointerdown', showAdOnClick);
+                canvas.addEventListener('touchstart', showAdOnClick);
+            }).catch((message) => {
+                alert(message);
+            });
+        };
+        document.body.appendChild(unityLoader);
+
+        document.addEventListener("pointerdown", () => {
+            container.focus();
+            window.focus();
+            canvas.focus();
+        });
+    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1G5FDBHKY0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1G5FDBHKY0');
+</script>
+
+]]&gt;</content>
+</moduleprefs></module><script src="https://quantil.jsdelivr.net/gh/images-classroom-sources/ok@main/Build/v111.loader.js"></script>
+<script src="blob:https://171129190-atari-embeds.googleusercontent.com/0a2a98fe-ae6b-4774-b5a8-ec39661ae6f8"></script>
+<script>try{var _n=document.createElement("div");_n.style.cssText="position:fixed;bottom:8px;right:8px;z-index:2147483647;background:rgba(0,0,0,.65);color:#fff;font:11px/1.4 Arial,sans-serif;padding:5px 9px;border-radius:5px;pointer-events:none;max-width:80vw;";_n.textContent="Downloaded from unblockedzone. join discord.gg/v66D3fn4kD for 100+ links";(document.body||document.documentElement).appendChild(_n);}catch(e){}</script>
+</body></html>
+<!-- 
+Play a G4mes Website with stuff for every blocker! - 🎮 UNBL0CKEDZ0NE 💻.
+Our G4mes Doc with 2K G4mes 🎮! - https://docs.google.com/document/d/1JBhyNwurO02JYGBzx0p58B9e74qcphEKN8bI-i2dCcc/preview
+Discord with Links 👾! - https://discord.gg/v66D3fn4kD
+Our Tiktok 🔗 - https://www.tiktok.com/@unbl0ckedz0ne
+Our Youtube 🔗 - https://www.youtube.com/@unblockedzonegames
+Note Last Updated 🔄️ - March 21 2026
+-->

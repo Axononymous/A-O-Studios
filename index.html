@@ -84,14 +84,11 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
     <link
       href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-
     <title>Google</title>
-
     <style>
       /* Our color palette */
       :root {
@@ -106,7 +103,6 @@
         --muted: #aaa6bc;
         --grid-line: rgba(220, 220, 220, 0.08);
       }
-
       :root[data-theme="green"] {
         --bg: #08140f;
         --surface: #10231a;
@@ -119,10 +115,13 @@
         --muted: #a7c7b4;
         --grid-line: rgba(104, 224, 155, 0.11);
       }
-
       * {
         font-family: "Clarity City", sans-serif;
         box-sizing: border-box;
+      }
+
+      html, body {
+        overflow: hidden;
       }
       /* Password screen — Google look  */
       #Password {
@@ -144,13 +143,11 @@
         color: #222222;
         transition: opacity 0.25s ease;
       }
-
       /* The Google look uses Arial, not Clarity City */
       #Password,
       #Password * {
         font-family: Arial, sans-serif;
       }
-
       /* Top-right links: Sign In, grid, Images, Gmail */
       .g-nav {
         list-style: none;
@@ -158,22 +155,18 @@
         padding: 0 30px 0 0;
         text-align: right;
       }
-
       .g-nav li {
         display: inline-block;
         margin: 0 0 0 20px;
       }
-
       .g-nav a {
         color: #757575;
         font-size: 13px;
         text-decoration: none;
       }
-
       .g-nav a:hover {
         text-decoration: underline;
       }
-
       a.g-signin {
         display: inline-block;
         height: 28px;
@@ -187,22 +180,18 @@
         text-decoration: none;
         cursor: pointer;
       }
-
       a.g-signin:hover {
         text-decoration: none;
         filter: brightness(1.05);
       }
-
       .g-grid {
         opacity: 0.55;
         padding: 7px 0;
         height: 100%;
       }
-
       .g-grid:hover {
         opacity: 1;
       }
-
       /* Center the logo + password box */
       .g-main {
         position: relative;
@@ -211,19 +200,16 @@
         margin: 0 auto;
         text-align: center;
       }
-
       .g-logo {
         height: 92px;
         margin-bottom: 25px;
       }
-
       .g-search {
         position: relative;
         width: 600px;
         max-width: 90%;
         margin: 0 auto;
       }
-
       /* The password box, styled to look like the Google search box */
       #password {
         display: block;
@@ -238,21 +224,17 @@
         border-radius: 2px;
         outline: none;
       }
-
       #password:hover {
         border: 1px solid #757575;
       }
-
       #password:focus {
         border: 1px solid #4285f4;
       }
-
       .g-buttons {
         padding: 12px 2px;
         margin-bottom: 25px;
         text-align: center;
       }
-
       .g-button {
         background-color: #f2f2f2;
         border: 1px solid #f2f2f2;
@@ -265,13 +247,11 @@
         color: #757575;
         cursor: pointer;
       }
-
       .g-button:hover {
         border: 1px solid #c6c6c6;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
         color: #222222;
       }
-
       /* Bottom bar */
       .g-footer {
         position: fixed;
@@ -282,33 +262,27 @@
         border-top: 1px solid #e4e4e4;
         font-size: 13px;
       }
-
       .g-footer ul {
         list-style: none;
         margin: 0;
         padding: 0;
       }
-
       .g-footer li {
         display: inline-block;
         margin: 0 10px;
       }
-
       .g-footer a {
         color: #757575;
         text-decoration: none;
         line-height: 40px;
       }
-
       .g-footer a:hover {
         text-decoration: underline;
       }
-
       .g-footer-left {
         float: left;
         padding: 0 0 0 30px;
       }
-
       .g-footer-right {
         float: right;
         margin: 0 30px 0 0;
@@ -317,31 +291,25 @@
         background-color: var(--surface-2);
         border: 1px solid transparent;
         color: var(--muted);
-
         padding: 9px 14px;
         border-radius: 9px;
-
         transition:
           background 0.2s ease,
           color 0.2s ease,
           border-color 0.2s ease;
       }
-
       button:hover {
         background: var(--accent-2);
         color: var(--accent-ink);
         cursor: pointer;
       }
-
       .navigation {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
       }
-
       /* general */
-
       body {
         margin: 0;
         font-family: Arial, sans-serif;
@@ -353,89 +321,81 @@
         background-size: 32px 32px;
         background-attachment: fixed;
       }
-
       h1 {
-        margin-top: 8px;
-        margin-bottom: 8px;
+        margin: 12px;
+        font-size: 32px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
       }
-
+      h2 {
+        margin: 0 0 10px;
+        font-size: 24px;
+        line-height: 1.3;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        line-height: 1.4;
+      }
       p {
+        margin: 0 0 12px;
+        line-height: 1.6;
         color: var(--muted);
       }
-
       /* Splash screen */
-
       .intro {
         position: fixed;
         top: 0;
         left: 0;
-
         width: 100vw;
         height: 100vh;
-
         background-color: var(--bg);
-
         z-index: 999999;
-
         display: flex;
         align-items: center;
         justify-content: center;
-
         opacity: 1;
         visibility: visible;
         pointer-events: all;
-
         transition:
           opacity 0.7s ease,
           visibility 0.7s ease;
       }
-
       .logo-header {
         margin: 0;
         padding: 0;
-
         color: var(--text);
         letter-spacing: 3px;
         text-align: center;
       }
-
       .logo {
         display: inline-block;
-
         font-size: 50px;
-
         opacity: 0;
         transform: translateY(30px);
-
         transition:
           transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
           opacity 0.5s ease;
       }
-
       .logo.active {
         opacity: 1;
         transform: translateY(0);
       }
-
       .logo.fade {
         opacity: 0;
         transform: translateY(-80px);
       }
-
       .intro.hide {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
       }
-
       .intro.instant {
         transition: none;
       }
-
       /* header */
-
       header {
-        margin: 16px;
+        margin: 12px;
         padding: 12px 20px;
         text-align: center;
         text-shadow: 0 0 2px var(--text);
@@ -445,80 +405,60 @@
         background-color: var(--surface);
         visibility: hidden;
       }
-
       header:hover {
         border-color: var(--accent);
       }
-
       header h4 {
         position: absolute;
         left: 10%;
         bottom: 1rem;
         font-size: 1.6rem;
       }
-
       /* navigation */
-
       nav button {
         background-color: var(--surface-2);
         border: 1px solid transparent;
         visibility: hidden;
         color: var(--muted);
-
         padding: 9px 14px;
         border-radius: 9px;
-
         transition:
           background 0.2s ease,
           color 0.2s ease,
           border-color 0.2s ease;
       }
-
       nav button:hover {
         background: var(--accent-2);
         color: var(--accent-ink);
         cursor: pointer;
       }
-
       nav button.active {
         background: var(--surface-2);
         color: var(--text);
         border-color: var(--accent-2);
       }
-
       /* main */
-
       main {
         width: 95%;
         margin: 20px auto;
       }
-
       .page {
         opacity: 0;
         visibility: hidden;
-
         position: absolute;
-
         width: 90%;
-
         box-sizing: border-box;
-
         border: 2px solid var(--bg);
-
         background-color: var(--surface);
-
-        padding: 30px;
+        padding: 42px;
         border-radius: 15px;
-
         transform: translateY(10px);
-
         transition:
           opacity 0.25s ease,
           transform 0.25s ease,
           border-color 0.5s ease;
         min-height: 80vh;
       }
-
       .page.active {
         opacity: 1;
         visibility: visible;
@@ -527,49 +467,35 @@
         transform: translateY(0);
         border-color: var(--line);
         margin: 0;
+        height: 65vh;
       }
-
-      .page:hover {
-      }
-
       /* Html Emulator */
       .container {
         width: 100%;
-
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
       }
-
       textarea {
         width: 90%;
         height: 150px;
-
         padding: 8px;
-
         border: 2px solid var(--surface);
         border-radius: 15px;
-
         background-color: var(--bg);
         color: var(--text);
-
         accent-color: var(--accent);
-
         resize: none;
-
         transition: border-color 0.2s ease;
       }
-
       textarea:hover {
         border-color: var(--surface-2);
       }
-
       textarea:focus {
         outline: none;
         border-color: var(--accent);
       }
-
       .EmulateButton {
         position: static;
 
@@ -613,14 +539,17 @@
         font-size: 24px;
       }
       .section {
-        border: 2px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        min-height: 175px;
+        border: 1px solid var(--line);
         background-color: var(--surface-2);
-        border-radius: 12px;
-        padding: 12px;
+        border-radius: 14px;
         transition: all 0.2s ease;
         height: 42vh;
         width: 40vw;
-        margin: 24px;
+        margin: 0;
+        padding: 20px;
       }
       .section:hover {
         transform: translateY(-2px);
@@ -628,10 +557,8 @@
       }
       .grid-container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        align-items: center;
-      }
-      h2 {
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 16px;
       }
       img {
         border-radius: 5%;
@@ -641,6 +568,11 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
         gap: 16px;
+        background-color: var(--bg);
+        padding: 20px;
+        overflow-y: auto;
+        border-radius: 12px;
+        max-height: 60vh;
       }
       .game-card {
         display: flex;
@@ -651,14 +583,18 @@
         border: 1px solid var(--line);
         border-radius: 14px;
         transition: all 0.2s ease;
+        animation: fadeIn linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 20%;
       }
 
       .game-card h3 {
-        margin: 8px;
+        margin: 0 0 8px;
         color: var(--text);
       }
 
       .game-card p {
+        margin: 0 0 16px;
         color: var(--muted);
         line-height: 1.5;
       }
@@ -676,9 +612,31 @@
       .game-card:hover {
         border-color: var(--accent);
       }
+      #searchInput {
+        gap: 12px;
+        color: var(--text);
+        width: 40vw;
+        height: 32px;
+        font-size: 18px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background-color: var(--surface-2);
+        padding: 8px;
+        margin-bottom: 12px;
+      }
+      @keyframes fadeIn {
+      from {
+       opacity: 0;
+      scale: 0.5
+     }
+     to {
+       opacity: 1;
+       scale: 1;
+      }
+    }
+
     </style>
   </head>
-
   <body>
     <!-- Password screen (Google) -->
 
@@ -798,16 +756,24 @@
         <nav>
           <button data-page="home" onclick="showPage('home')">Home</button>
           <button data-page="about" onclick="showPage('about')">Stuff</button>
-          <button data-page="Emulator" onclick="showPage('Emulator')">
-            Emulator
-          </button>
-          <button data-page="contact" onclick="showPage('contact')">
-            Settings
-          </button>
+          <button data-page="Emulator" onclick="showPage('Emulator')">Emulator</button>
+          <button data-page="settings" onclick="showPage('settings')">Settings</button>
         </nav>
       </div>
     </header>
     <main>
+      <!-- Html Emulator -->
+
+      <section id="Emulator" class="page">
+        <h1>HTML Runner</h1>
+
+        <div class="container">
+          <textarea id="code" placeholder="insert html. . ."></textarea>
+
+          <button class="EmulateButton" onclick="Newtab()">Emulate</button>
+        </div>
+      </section>
+
       <!-- Home -->
 
       <section id="home" class="page">
@@ -838,10 +804,8 @@
       <!-- About -->
 
       <section id="about" class="page">
-        <h2>Stuff</h2>
-
-        <p>We will insert stuff below.</p>
-
+        <h3>Let us know if you know of a game we should add!</h3>
+         <input type="text" id="searchInput" placeholder="Search for games..." onkeyup="filterItems()">
         <div class="game-grid">
           <article class="game-card">
             <h3>Toby Web</h3>
@@ -857,27 +821,64 @@
 
           <article class="game-card">
             <h3>Hollow Knight</h3>
-            <p>
-              If the scaling is off, just refresh. It loads faster the second
-              time.
-            </p>
+            <p>Open Hollow Knight in a new tab.</p>
             <button onclick="Knight()">Open</button>
           </article>
 
           <article class="game-card">
             <h3>Geometry Dash</h3>
-            <p>Open Geometry Dash (GDWEB+) in a new tab.</p>
+            <p>Open Geometry Dash in a new tab.</p>
             <button onclick="GD()">Open</button>
           </article>
 
           <article class="game-card">
             <h3>Cookie Clicker</h3>
-            <p>Open Cookie Clicker in a new tab.</p>
+            <p>
+              Open Cookie Clicker in a new tab. Once you click your language, relaunch the tab.
+            </p>
             <button onclick="CC()">Open</button>
+          </article>
+
+          <article class="game-card">
+            <h3>Minecraft 26.2</h3>
+            <p>
+              Opens MC 26.2 in a new tab. Note: Very big file, don't be
+              discouraged if it takes a long time to load.
+            </p>
+            <button onclick="MC()">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>PolyTrack</h3>
+            <p>Opens PolyTrack in a new tab.</p>
+            <button onclick="PT()">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Slope</h3>
+            <p>Opens Slope in a new tab.</p>
+            <button onclick="Slope()">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Crossy Road</h3>
+            <p>Opens Crossy road in a new tab</p>
+            <button onclick="CR()">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Deltarune</h3>
+            <p>Opens Deltarune in a new tab</p>
+            <button onclick="DR()">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Dice a Million</h3>
+            <p>Opens DaM in a new tab</p>
+            <button onclick="DaM()">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>OVO</h3>
+            <p>Opens OvO in a new tab</p>
+            <button onclick="ovo()">Open</button>
           </article>
         </div>
         <script>
-            /* Hollow Knight */
           function Knight() {
             const newWindow = window.open("about:blank", "_blank");
             fetch(
@@ -890,7 +891,7 @@
                 newWindow.document.close();
               });
           }
-          /* Geometry Dash */
+
           function GD() {
             const newWindow = window.open("about:blank", "_blank");
             fetch(
@@ -903,7 +904,6 @@
                 newWindow.document.close();
               });
           }
-          /* Cookie Clicker */
           function CC() {
             const newWindow = window.open("about:blank", "_blank");
             fetch(
@@ -916,7 +916,6 @@
                 newWindow.document.close();
               });
           }
-          /* Toby Web */
           function Toby() {
             const newWindow = window.open("about:blank", "_blank");
 
@@ -930,7 +929,6 @@
                 newWindow.document.close();
               });
           }
-          /* Undertale */
           function Undertale() {
             const newWindow = window.open("about:blank", "_blank");
             fetch(
@@ -943,13 +941,109 @@
                 newWindow.document.close();
               });
           }
+          function MC() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/eaglercraft26-2.html",
+            )
+              .then((response) => response.text())
+              .then((MC) => {
+                newWindow.document.open();
+                newWindow.document.write(MC);
+                newWindow.document.close();
+              });
+          }
+          function PT() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Poly_Track.html",
+            )
+              .then((response) => response.text())
+              .then((PT) => {
+                newWindow.document.open();
+                newWindow.document.write(PT);
+                newWindow.document.close();
+              });
+          }
+          function Slope() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Slope.html",
+            )
+              .then((response) => response.text())
+              .then((Slope) => {
+                newWindow.document.open();
+                newWindow.document.write(Slope);
+                newWindow.document.close();
+              });
+          }
+          function CR() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Crossy_Road.html",
+            )
+              .then((response) => response.text())
+              .then((CR) => {
+                newWindow.document.open();
+                newWindow.document.write(CR);
+                newWindow.document.close();
+              });
+          }
+          function DR() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Deltarune.html",
+            )
+              .then((response) => response.text())
+              .then((DR) => {
+                newWindow.document.open();
+                newWindow.document.write(DR);
+                newWindow.document.close();
+              });
+          }
+          function DaM() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Dice_a_Million.html",
+            )
+              .then((response) => response.text())
+              .then((DaM) => {
+                newWindow.document.open();
+                newWindow.document.write(DaM);
+                newWindow.document.close();
+              });
+          }
+          function ovo() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/OvO.html",
+            )
+              .then((response) => response.text())
+              .then((ovo) => {
+                newWindow.document.open();
+                newWindow.document.write(ovo);
+                newWindow.document.close();
+              });
+          }
+                    function cloak() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/index.html",
+            )
+              .then((response) => response.text())
+              .then((cloak) => {
+                newWindow.document.open();
+                newWindow.document.write(cloak);
+                newWindow.document.close();
+              });
+          }
         </script>
       </section>
 
-      <!-- Tools (currently has no button in the navigation bar)-->
+      <!-- Tools (Currently not in navigation menu) -->
 
       <section id="projects" class="page">
-        <h2>Tools</h2>
+        <h2>T00ls</h2>
 
         <article>
           <h3>HTML Emulator</h3>
@@ -960,53 +1054,41 @@
         <article>
           <h3>Test Website</h3>
 
-          <p>...A test website, what did you expect?</p>
+          <p>Something awesome we are going to build</p>
         </article>
-      </section>
-
-      <!-- Html Emulator -->
-
-      <section id="Emulator" class="page">
-        <h1>HTML Runner</h1>
-
-        <div class="container">
-          <textarea id="code" placeholder="insert html. . ."></textarea>
-
-          <button class="EmulateButton" onclick="Newtab()">Emulate</button>
-        </div>
       </section>
 
       <!-- Settings -->
 
-      <section id="contact" class="page">
+      <section id="settings" class="page">
         <h2>Settings</h2>
+        <br />
+        <button onclick="cloak()">Cloak Tab</button>
         <br />
         <br />
         <button
           id="color-toggle"
           type="button"
           aria-pressed="false"
-          onclick="switchColors()"
+          onclick="Green()"
         >
           Switch to green palette
         </button>
-
         <br />
         <br />
 
-        <label> Request a feature: </label>
+        <label> Message: </label>
+        <br />
+        <br />
         <textarea></textarea>
         <br />
         <br />
-        <button onclick="sendMessage()">Send Message</button>
+
+        <button>Send</button>
       </section>
     </main>
-
-    <!--Main Javascript-->
-
     <script>
       /* Page navigation */
-
       function showPage(page) {
         document.querySelectorAll(".page").forEach(function (section) {
           section.classList.remove("active");
@@ -1018,27 +1100,20 @@
         });
       }
       /* Html Emulator */
-
       function Newtab() {
         const code = document.getElementById("code").value;
-
         const newWindow = window.open("about:blank", "_blank");
-
         if (!newWindow) {
           alert(
             "The new tab was blocked by your browser, please allow pop-ups for this site.",
           );
-
           return;
         }
-
         newWindow.document.open();
-
         newWindow.document.write(code);
-
         newWindow.document.close();
       }
-      function switchColors() {
+      function Green() {
         const root = document.documentElement;
         const useGreenPalette = root.dataset.theme !== "green";
         const toggleButton = document.getElementById("color-toggle");
@@ -1047,13 +1122,28 @@
         toggleButton.textContent = useGreenPalette
           ? "Switch to purple palette"
           : "Switch to green palette";
-        toggleButton.setAttribute("aria-pressed", String(useGreenPalette));
+        toggleButton.setAttribute("aria-pressed",);
       }
-      function sendMessage() {
-        alert(
-          "This feature is incomplete, I'll finish it when I find the time to learn Javascript! If you have a question right now, email me (Axononymous@gmail.com) or OddDuckling. -Axo",
-        );
-      }
+      /* This part is for the game search function, I'm gonna try to learn more javascript starting today - Axo */
+      function filterItems() {
+  // Get the user's input value and convert to lowercase
+  const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+  
+  // Grab all the items inside your container
+  const items = document.querySelectorAll('.game-card');
+
+  // Loop through each item and check if it matches the text
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    
+    if (text.includes(searchQuery)) {
+      item.style.display = ""; // Show the item if it matches
+    } else {
+      item.style.display = "none"; // Hide the item if it doesn't match
+    }
+  });
+}
+
     </script>
   </body>
 </html>

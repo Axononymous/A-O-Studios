@@ -673,7 +673,7 @@
         <div class="g-search">
           <input
             id="password"
-            type="text"
+            type="password"
             placeholder="Search Google"
             autocomplete="off"
             onkeydown="if (event.key === 'Enter') check();"
@@ -877,6 +877,11 @@
             <p>Opens OvO in a new tab</p>
             <button onclick="ovo()">Open</button>
           </article>
+            <article class="game-card">
+            <h3>Drive Mad</h3>
+            <p>Opens Drive Mad in a new tab</p>
+            <button onclick="DM()">Open</button>
+          </article>
         </div>
         <script>
           function Knight() {
@@ -1034,6 +1039,18 @@
               .then((cloak) => {
                 newWindow.document.open();
                 newWindow.document.write(cloak);
+                newWindow.document.close();
+              });
+          }
+                              function DM() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Drive_Mad.html",
+            )
+              .then((response) => response.text())
+              .then((dm) => {
+                newWindow.document.open();
+                newWindow.document.write(dm);
                 newWindow.document.close();
               });
           }

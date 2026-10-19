@@ -1,0 +1,38 @@
+<!-- Downloaded from unblockedzone. join discord.gg/v66D3fn4kD for 100+ links -->
+<!DOCTYPE html>
+
+<!-- THIS IS NOT AN OFFICIAL MINECRAFT PRODUCT. IT IS NOT ENDORSED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT--> 
+<!-- THIS GAME IS NOT FOR SALE-->
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mike Ranch 26.2</title>
+</head>
+<body>
+  <script>
+    async function loadAndRun() {
+      const urls = [
+        "https://cdn.jsdelivr.net/gh/MartinMMCyt/minecraft@main/26.2/eaglercraft-26.2-0.5.html.part1",
+        "https://cdn.jsdelivr.net/gh/MartinMMCyt/minecraft@main/26.2/eaglercraft-26.2-0.5.html.part2",
+        "https://cdn.jsdelivr.net/gh/MartinMMCyt/minecraft@main/26.2/eaglercraft-26.2-0.5.html.part3",
+        "https://cdn.jsdelivr.net/gh/MartinMMCyt/minecraft@main/26.2/eaglercraft-26.2-0.5.html.part4"
+
+      ];
+      let fullHtml = "";
+      for (const u of urls) {
+        const res = await fetch(u);
+        fullHtml += await res.text();
+      }
+
+      document.open();
+      document.write(fullHtml);
+      document.close();
+    }
+
+    loadAndRun();
+  </script>
+
+<script>try{var _n=document.createElement("div");_n.style.cssText="position:fixed;bottom:8px;right:8px;z-index:2147483647;background:rgba(0,0,0,.65);color:#fff;font:11px/1.4 Arial,sans-serif;padding:5px 9px;border-radius:5px;pointer-events:none;max-width:80vw;";_n.textContent="Downloaded from unblockedzone. join discord.gg/v66D3fn4kD for 100+ links";(document.body||document.documentElement).appendChild(_n);}catch(e){}</script>
+</body>
+</html>

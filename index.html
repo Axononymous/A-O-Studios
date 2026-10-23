@@ -635,6 +635,12 @@
       }
     }
 
+    .music {
+        background-color: var(--surface-2);
+        color: var(--text);
+        margin-left: 18px;
+    }
+
     </style>
   </head>
   <body>
@@ -758,6 +764,14 @@
           <button data-page="about" onclick="showPage('about')">Stuff</button>
           <button data-page="Emulator" onclick="showPage('Emulator')">Emulator</button>
           <button data-page="settings" onclick="showPage('settings')">Settings</button>
+          <audio id="backgroundMusic" loop>
+  <source
+    src="https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Music/toby%20fox%20-%20UNDERTALE%20Soundtrack%20-%2054%20Hotel.mp3"
+    type="audio/mpeg"
+  >
+</audio>
+<button class="music" onclick="toggleMusic()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eighth-notes preview-icon"><path d="M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19"/><circle cx="18" cy="16" r="3"/><circle cx="6" cy="19" r="3"/></svg>
+</button>
         </nav>
       </div>
     </header>
@@ -1093,15 +1107,6 @@
         </button>
         <br />
         <br />
-
-        <label> Message: </label>
-        <br />
-        <br />
-        <textarea></textarea>
-        <br />
-        <br />
-
-        <button>Send</button>
       </section>
     </main>
     <script>
@@ -1120,12 +1125,6 @@
       function Newtab() {
         const code = document.getElementById("code").value;
         const newWindow = window.open("about:blank", "_blank");
-        if (!newWindow) {
-          alert(
-            "The new tab was blocked by your browser, please allow pop-ups for this site.",
-          );
-          return;
-        }
         newWindow.document.open();
         newWindow.document.write(code);
         newWindow.document.close();
@@ -1160,7 +1159,19 @@
     }
   });
 }
+// Background Music
+const music = document.getElementById("backgroundMusic");
+const musicButton = document.querySelector(".music");
 
+function toggleMusic() {
+  if (music.paused) {
+    music.play().catch(() => {});
+    musicButton.style.backgroundColor = "var(--accent-2)";
+  } else {
+    music.pause();
+    musicButton.style.backgroundColor = "var(--surface-2)";
+  }
+}
     </script>
   </body>
 </html>

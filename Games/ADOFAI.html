@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="https://cdn.jsdelivr.net/gh/nawsif/host@main/ADOFAI/">
+<script src="https://tinklehost.github.io/intro.js"></script>
+<title>A Dance of Fire and Ice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#414141;color:#f5f7ff;font-family:Arial,sans-serif}
+#unity-canvas{display:block;width:100%;height:100%;outline:none;background:#151515;touch-action:none}
+#loading{position:fixed;inset:0;z-index:70;background:#414141;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;color:#f6cb68;transition:opacity .7s ease,visibility .7s ease;font-family:'Orbitron',Arial,sans-serif}
+#loading.fading{opacity:0;visibility:hidden;pointer-events:none}
+.tinkle-diamond{width:48px;height:48px;border:3px solid #efbd47;transform:rotate(45deg);box-shadow:0 0 18px #dca12877;animation:diamond-pulse 1.5s ease-in-out infinite;margin:0 0 12px}
+@keyframes diamond-pulse{0%,100%{opacity:.55;scale:.9}50%{opacity:1;scale:1.1}}
+.tinkle-title{font-weight:900;font-size:clamp(27px,6vw,53px);letter-spacing:.1em;background:linear-gradient(180deg,#fff2af 0%,#f6c55d 40%,#b97613 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tinkle-track{width:min(365px,80vw);height:10px;border:1px solid #d6a538;background:#252525;border-radius:15px;overflow:hidden;margin-top:8px}
+#tinkle-progress{height:100%;width:0;background:linear-gradient(90deg,#b67a19,#ffdf70);transition:width .17s linear;box-shadow:0 0 12px #ffdc6d}
+#tinkle-percent{font-size:15px;letter-spacing:.15em;color:#ffcf65}
+#status{font-family:Arial,sans-serif;font-size:13px;color:#dedede;max-width:85vw;overflow-wrap:anywhere;margin:0}
+button{color:#ffcf65;background:#252525;border:1px solid #d6a538;border-radius:8px;padding:10px 18px;cursor:pointer;font:inherit}[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){.tinkle-diamond{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="unity-canvas" tabindex="0" aria-label="A Dance of Fire and Ice game"></canvas>
+<div id="loading" role="status" aria-live="polite">
+<div class="tinkle-diamond" aria-hidden="true"></div>
+<div class="tinkle-track" role="progressbar" aria-label="Game loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="tinkle-progress"></div></div>
+<div id="tinkle-percent">0%</div>
+<p id="status">Preparing game...</p>
+<button id="retry" hidden>Try again</button></div>
+<div id="play-screen" hidden style="position:fixed;inset:0;z-index:71;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#414141;text-align:center">
+<button id="play" style="padding:14px 48px;font-weight:bold">PLAY</button>
+</div>
+<script>
+"use strict";
+// Build and StreamingAssets must be alongside this page.
+const BUILD="Build/", VERSION="tinkle-routing-6", PARTS={data:9,wasm:7};
+const canvas=document.getElementById("unity-canvas"), loading=document.getElementById("loading"), status=document.getElementById("status"), progress=document.getElementById("tinkle-progress"), retry=document.getElementById("retry");
+const objectUrls=[];
+let unityInstance,failed=false,completed=0;
+// Browser audio requires a real user gesture. Track Unity's audio context and
+// retry media playback that autoplay policy rejected before the PLAY click.
+const audioContexts=new Set(),blockedMedia=new Set();
+const NativeAudioContext=window.AudioContext||window.webkitAudioContext;
+if(NativeAudioContext){
+  const TrackedAudioContext=new Proxy(NativeAudioContext,{construct(target,args){
+    const context=Reflect.construct(target,args);audioContexts.add(context);
+    context.addEventListener("statechange",()=>console.info("[Game audio] context "+context.state));
+    return context;
+  }});
+  window.AudioContext=TrackedAudioContext;
+  if(window.webkitAudioContext)window.webkitAudioContext=TrackedAudioContext;
+}
+const nativePlay=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+  const media=this;
+  const result=nativePlay.call(media);
+  if(result&&result.then)result.then(()=>blockedMedia.delete(media),error=>{
+    if(error.name==="NotAllowedError")blockedMedia.add(media);
+  });
+  return result;
+};
+const nativePause=HTMLMediaElement.prototype.pause;
+HTMLMediaElement.prototype.pause=function(){blockedMedia.delete(this);return nativePause.call(this);};
+function enableAudio(){
+  audioContexts.forEach(context=>{
+    if(context.state!=="closed"&&context.state!=="running")context.resume().catch(console.warn);
+  });
+  blockedMedia.forEach(media=>{
+    if(media.ended||!media.src){blockedMedia.delete(media);return;}
+    const result=nativePlay.call(media);
+    if(result)result.then(()=>{blockedMedia.delete(media);console.info("[Game audio] media playing");}).catch(console.warn);
+  });
+}
+window.addEventListener("pointerdown",enableAudio,true);
+window.addEventListener("keydown",enableAudio,true);
+document.getElementById("play").addEventListener("click",()=>{
+  enableAudio();document.getElementById("play-screen").hidden=true;canvas.focus();
+});
+let lastProgress=0;
+function setProgress(value){lastProgress=Math.max(lastProgress,Math.min(100,value*100));progress.style.width=lastProgress+"%";document.getElementById("tinkle-percent").textContent=Math.floor(lastProgress)+"%";document.querySelector(".tinkle-track").setAttribute("aria-valuenow",Math.floor(lastProgress));}
+function fail(error){failed=true;loading.hidden=false;status.textContent=error instanceof Error?error.message:String(error);retry.hidden=false;document.querySelector(".tinkle-diamond").style.animationPlayState="paused";}
+retry.addEventListener("click",()=>location.reload());
+async function joinParts(name,count,type){
+  const buffers=[];
+  for(let part=1;part<=count;part++){
+    const filename=name+".part"+String(part).padStart(3,"0");
+    const response=await fetch(BUILD+filename+"?v="+VERSION);
+    if(!response.ok)throw new Error("Could not load "+filename+" (HTTP "+response.status+"). Check the Build folder.");
+    const bytes=await response.arrayBuffer();
+    if(!bytes.byteLength)throw new Error(filename+" is empty.");
+    buffers.push(bytes);completed++;
+    if(!failed){setProgress(completed/16*.75);status.textContent="Loading game files… "+completed+" / 16";}
+  }
+  const url=URL.createObjectURL(new Blob(buffers,{type}));objectUrls.push(url);return url;
+}
+function loadScript(url){return new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=url;script.onload=resolve;script.onerror=()=>reject(new Error("Could not load "+BUILD+"WebGL.loader.js."));document.body.appendChild(script);});}
+async function start(){
+  if(location.protocol==="file:"&&new URL(document.baseURI).protocol==="file:")throw new Error("Open this game through a web server, such as http://localhost:8000, rather than directly from disk.");
+  const [dataUrl,codeUrl]=await Promise.all([
+    joinParts("WebGL.data",PARTS.data,"application/octet-stream"),
+    joinParts("WebGL.wasm",PARTS.wasm,"application/wasm"),
+    loadScript(BUILD+"WebGL.loader.js?v="+VERSION)
+  ]);
+  status.textContent="Starting game…";
+  unityInstance=await createUnityInstance(canvas,{
+    dataUrl,codeUrl,frameworkUrl:BUILD+"WebGL.framework.js?v="+VERSION,
+    streamingAssetsUrl:new URL("StreamingAssets/",document.baseURI).href,companyName:"7th Beat Games",productName:"A Dance of Fire and Ice",productVersion:"2.0.3",
+    matchWebGLToCanvasSize:true,
+    showBanner(message,type){if(type==="error")fail(message);else console.warn(message);}
+  },value=>{if(!failed)setProgress(.75+value*.25);});
+  objectUrls.forEach(url=>URL.revokeObjectURL(url));
+  if(!failed){setProgress(1);status.textContent="Ready!";loading.classList.add("fading");setTimeout(()=>{loading.hidden=true;document.getElementById("play-screen").hidden=false;document.getElementById("play").focus();},750);}
+}
+// Fill the browser window automatically. Double-click for browser fullscreen.
+canvas.addEventListener("dblclick",()=>{if(unityInstance&&!document.fullscreenElement)unityInstance.SetFullscreen(1);});
+start().catch(fail);
+</script>
+</body>
+</html>

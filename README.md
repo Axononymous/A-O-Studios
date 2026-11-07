@@ -15,18 +15,11 @@ Some features may function differently depending on your browser settings, and w
 
 ### HTML Emulator
 
-We are creating an **HTML Emulator**, which is a tool designed to run custom HTML code for unblocked games or other code of your choice.
-The emulator is a work in progress, and we're trying to improve it however we can.
+This tool allows you to test out your HTML code by running it in a new about:blank page.
 
 ### More projects coming soon!
 
-## Links:
-
-- About: https://axononymous.github.io/A-O-Studios/
-* Html Emulator: https://axononymous.github.io/A-O-Studios/HtmlEmulator/index.html
-+
-
-As A&O Studios grows, we'll add more projects, tools, and experiments to this repository.
+Over time, we'll add more of our projects and tools to this repository.
 
 ## Contributing
 

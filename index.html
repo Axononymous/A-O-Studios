@@ -515,25 +515,25 @@
           <article class="game-card">
             <h3>Toby Web</h3>
             <p>Open Toby Web in a new tab.</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/OddDuckling12/Toby-web@main/index.html')">Open</button>
+            <button onclick="loadGame('TobyWeb.html')">Open</button>
           </article>
 
           <article class="game-card">
             <h3>Undertale</h3>
             <p>Open Undertale in a new tab.</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Undertale.html')">Open</button>
+            <button onclick="loadGame('Undertale.html')">Open</button>
           </article>
 
           <article class="game-card">
             <h3>Hollow Knight</h3>
             <p>Open Hollow Knight in a new tab.</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Hollow_Knight.html')">Open</button>
+            <button onclick="loadGame('Hollow_Knight.html')">Open</button>
           </article>
 
           <article class="game-card">
             <h3>Geometry Dash</h3>
             <p>Open Geometry Dash in a new tab.</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/GDWEB___Stable_.html')">Open</button>
+            <button onclick="loadGame('GDWEB___Stable_.html')">Open</button>
           </article>
 
           <article class="game-card">
@@ -541,7 +541,7 @@
             <p>
               Open Cookie Clicker in a new tab. Once you click your language, relaunch the tab.
             </p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Cookie_Clicker.html')">Open</button>
+            <button onclick="loadGame('Cookie_Clicker.html')">Open</button>
           </article>
 
           <article class="game-card">
@@ -550,52 +550,52 @@
               Opens MC 26.2 in a new tab. Note: Very big file, don't be
               discouraged if it takes a long time to load.
             </p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Minecraft_26_2.html)">Open</button>
+            <button onclick="loadGame('Minecraft_26_2.html')">Open</button>
           </article>
           <article class="game-card">
             <h3>PolyTrack</h3>
             <p>Opens PolyTrack in a new tab.</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Poly_Track.html')">Open</button>
+            <button onclick="loadGame('Poly_Track.html')">Open</button>
           </article>
           <article class="game-card">
             <h3>Crossy Road</h3>
             <p>Opens Crossy road in a new tab</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Crossy_Road.html')">Open</button>
+            <button onclick="loadGame('Crossy_Road.html')">Open</button>
           </article>
           <article class="game-card">
             <h3>Deltarune</h3>
             <p>Opens Deltarune in a new tab</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Deltarune.html')">Open</button>
+            <button onclick="loadGame('Deltarune.html')">Open</button>
           </article>
           <article class="game-card">
             <h3>Dice a Million</h3>
             <p>Opens DaM in a new tab</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Dice_a_Million.html')">Open</button>
+            <button onclick="loadGame('Dice_a_Million.html')">Open</button>
           </article>
           <article class="game-card">
             <h3>OVO</h3>
             <p>Opens OvO in a new tab</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/OvO.html')">Open</button>
+            <button onclick="loadGame('OvO.html')">Open</button>
           </article>
             <article class="game-card">
             <h3>Drive Mad</h3>
             <p>Opens Drive Mad in a new tab</p>
-            <button onclick="loadGame('https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/Drive_Mad.html')">Open</button>
+            <button onclick="loadGame('Drive_Mad.html')">Open</button>
           </article>
           </article>
         </div>
         <script>
-            function loadGame(url) {
+            function loadGame(file) {
             const newWindow = window.open("about:blank", "_blank");
-            fetch(url)
+            fetch("https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/" + file)
               .then((response) => response.text())
-              .then((Knight) => {
+              .then((game) => {
                 newWindow.document.open();
-                newWindow.document.write(Knight);
+                newWindow.document.write(game);
                 newWindow.document.close();
               });
           }
-                    function cloak() {
+            function cloak() {
             const newWindow = window.open("about:blank", "_blank");
             fetch(
               "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/index.html",
@@ -693,14 +693,10 @@ function toggleMusic() {
   }
 }
 playIntro()
-document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
+document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
         document.getElementById("home").classList.add("active");
         document.querySelector("header").style.visibility = "visible";
-        document
-          .querySelectorAll("nav button")
-          .forEach((b) => (b.style.visibility = "visible"));
+        document.querySelectorAll("nav button").forEach((b) => (b.style.visibility = "visible"));
         document.querySelectorAll("nav button").forEach((button) => {
           button.style.visibility = "visible";
           button.classList.toggle("active", button.dataset.page === "home");

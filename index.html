@@ -394,6 +394,31 @@
         margin-left: 18px;
     }
 
+    #gamePlayer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--bg);
+}
+
+#gameToolbar {
+  height: 48px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border-radius: 0 0 24px 24px;
+}
+
+#gameFrame {
+  width: 100%;
+  height: calc(100% - 55px);
+  border: none;
+  background: white;
+}
+
     </style>
   </head>
   <body>
@@ -409,8 +434,6 @@
     <script>
       const intro = document.querySelector(".intro");
       const logoSpan = document.querySelectorAll(".logo");
-
-      // Play the A&O splash animation (runs after the password is entered)
       function playIntro() {
         // Pop the splash on instantly (no fade-in) so nothing shows behind it
         intro.classList.add("instant");
@@ -425,9 +448,9 @@
           logoSpan.forEach((span, idx) => {
             setTimeout(() => {
               span.classList.add("active");
-            }, idx * 500);
+            }, idx * 400);
           });
-        }, 500);
+        });
 
         // Start fading the logo out
         setTimeout(() => {
@@ -437,12 +460,12 @@
               span.classList.add("fade");
             }, idx * 150);
           });
-        }, 3000);
+        }, 2000);
 
         // Remove the splash screen
         setTimeout(() => {
           intro.classList.add("hide");
-        }, 2000);
+        }, 1000);
       }
     </script>
     <header>
@@ -482,12 +505,10 @@
       <!-- Home -->
 
       <section id="home" class="page">
-        <h2>Welcome!</h2>
-
-        <p>Welcome, you found our website!</p>
+        <h2>Welcome, you found our website!</h2>
         <p>
           We are A&O studios, which is a coding development team that is using
-          HTML and CSS to make websites!
+          HTML and CSS to make websites! We are learning a variety of web development skills, including HTML, CSS, and JavaScript.
         </p>
         <br />
         <h2>Projects:</h2>
@@ -495,13 +516,12 @@
           <div class="section">
             <h2>HTML Emulator</h2>
             <p>
-              We are creating a simple HTML5 runner, so you can test your code
-              real-time.
+              We made a simple HTML runner, so you can run your projects or games. It opens an about:blank tab, where your code is then executed.
             </p>
           </div>
           <div class="section">
-            <h2>Other</h2>
-            <p>(add projects here)</p>
+            <h2>Game Site</h2>
+            <p>We're making a "unblocked-games" style website so you can play a collection of html games. These include web-ports of popular games, or simply games intended to run in the browser.</p>
           </div>
         </div>
       </section>
@@ -509,7 +529,6 @@
       <!-- About -->
 
       <section id="about" class="page">
-        <h3>Let us know if you know of a game we should add!</h3>
          <input type="text" id="searchInput" placeholder="Search for games..." onkeyup="filterItems()">
         <div class="game-grid">
           <article class="game-card">
@@ -585,17 +604,42 @@
           </article>
         </div>
         <script>
-            function loadGame(file) {
-            const newWindow = window.open("about:blank", "_blank");
-            fetch("https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/" + file)
-              .then((response) => response.text())
-              .then((game) => {
-                newWindow.document.open();
-                newWindow.document.write(game);
-                newWindow.document.close();
-              });
-          }
-            function cloak() {
+            function loadGame(file) {       
+                const player = document.getElementById("gamePlayer");
+                const frame = document.getElementById("gameFrame");
+
+                player.style.display = "block";
+                frame.srcdoc = "Loading game...";
+
+                fetch("https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/" + file).then(response => response.text()).then(html => {
+                    frame.srcdoc = html;
+                })
+            }
+
+            function closeGame() {
+                document.getElementById("gamePlayer").style.display = "none";
+                document.getElementById("gameFrame").srcdoc = "";
+            }
+        </script>
+      </section>
+      <!-- Settings -->
+
+      <section id="settings" class="page">
+        <h2>Settings</h2>
+        <button onclick="cloak()">Cloak Tab</button>
+        <button
+          id="color-toggle"
+          type="button"
+          aria-pressed="false"
+          onclick="Green()"
+        >
+        Switch to green palette
+        </button>
+      </section>
+    </main>
+    <script>
+        /* about:blank cloaking */
+        function cloak() {
             const newWindow = window.open("about:blank", "_blank");
             fetch(
               "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/index.html",
@@ -607,29 +651,6 @@
                 newWindow.document.close();
               });
           }
-        </script>
-      </section>
-      <!-- Settings -->
-
-      <section id="settings" class="page">
-        <h2>Settings</h2>
-        <br />
-        <button onclick="cloak()">Cloak Tab</button>
-        <br />
-        <br />
-        <button
-          id="color-toggle"
-          type="button"
-          aria-pressed="false"
-          onclick="Green()"
-        >
-          Switch to green palette
-        </button>
-        <br />
-        <br />
-      </section>
-    </main>
-    <script>
       /* Page navigation */
       function showPage(page) {
         document.querySelectorAll(".page").forEach(function (section) {
@@ -662,10 +683,10 @@
       }
       /* This part is for the game search function, I'm gonna try to learn more javascript starting today - Axo */
       function filterItems() {
-  // Get the user's input value and convert to lowercase
+  // Gets the user's input value and convert to lowercase
   const searchQuery = document.getElementById('searchInput').value.toLowerCase();
   
-  // Grab all the items inside your container
+  // Takes all the items inside your container
   const items = document.querySelectorAll('.game-card');
 
   // Loop through each item and check if it matches the text
@@ -702,5 +723,15 @@ document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
           button.classList.toggle("active", button.dataset.page === "home");
         });
     </script>
+    <div id="gamePlayer">
+  <div id="gameToolbar">
+    <div>
+      <button onclick="document.getElementById('gameFrame').requestFullscreen()">Fullscreen</button>
+      <button onclick="closeGame()">Close</button>
+    </div>
+  </div>
+
+  <iframe id="gameFrame"></iframe>
+</div>
   </body>
 </html>

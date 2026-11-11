@@ -1,0 +1,706 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>A&O Studios</title>
+    <style>
+      /* Our color palette */
+      :root {
+        --bg: #111116;
+        --surface: #1b1a24;
+        --surface-2: #282638;
+        --line: #454157;
+        --accent: #a78bfa;
+        --accent-2: #c4b5fd;
+        --accent-ink: #211a31;
+        --text: #f4f1ff;
+        --muted: #aaa6bc;
+        --grid-line: rgba(220, 220, 220, 0.08);
+      }
+      :root[data-theme="green"] {
+        --bg: #08140f;
+        --surface: #10231a;
+        --surface-2: #19372a;
+        --line: #315843;
+        --accent: #35d399;
+        --accent-2: #a7f3d0;
+        --accent-ink: #062016;
+        --text: #f1fff6;
+        --muted: #a7c7b4;
+        --grid-line: rgba(104, 224, 155, 0.11);
+      }
+      * {
+        font-family: "Clarity City", sans-serif;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        overflow: hidden;
+      }
+      button {
+        background-color: var(--surface-2);
+        border: 1px solid transparent;
+        color: var(--muted);
+        padding: 9px 14px;
+        border-radius: 9px;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      button:hover {
+        background: var(--accent-2);
+        color: var(--accent-ink);
+        cursor: pointer;
+      }
+      .navigation {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      /* general */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: var(--text);
+        background-color: var(--bg);
+        background-image:
+          linear-gradient(var(--grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-attachment: fixed;
+      }
+      h1 {
+        margin: 12px;
+        font-size: 32px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        margin: 0 0 10px;
+        font-size: 24px;
+        line-height: 1.3;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        line-height: 1.4;
+      }
+      p {
+        margin: 0 0 12px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      /* Splash screen */
+      .intro {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--bg);
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transition:
+          opacity 0.7s ease,
+          visibility 0.7s ease;
+      }
+      .logo-header {
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+        letter-spacing: 3px;
+        text-align: center;
+      }
+      .logo {
+        display: inline-block;
+        font-size: 50px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.5s ease;
+      }
+      .logo.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .logo.fade {
+        opacity: 0;
+        transform: translateY(-80px);
+      }
+      .intro.hide {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .intro.instant {
+        transition: none;
+      }
+      /* header */
+      header {
+        margin: 12px;
+        padding: 12px 20px;
+        text-align: center;
+        text-shadow: 0 0 2px var(--text);
+        border-radius: 8px;
+        transition: border-color 0.5s ease;
+        border: 2px solid var(--line);
+        background-color: var(--surface);
+      }
+      header:hover {
+        border-color: var(--accent);
+      }
+      header h4 {
+        position: absolute;
+        left: 10%;
+        bottom: 1rem;
+        font-size: 1.6rem;
+      }
+      /* navigation */
+      nav button {
+        background-color: var(--surface-2);
+        border: 1px solid transparent;
+        color: var(--muted);
+        padding: 9px 14px;
+        border-radius: 9px;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      nav button:hover {
+        background: var(--accent-2);
+        color: var(--accent-ink);
+        cursor: pointer;
+      }
+      nav button.active {
+        background: var(--surface-2);
+        color: var(--text);
+        border-color: var(--accent-2);
+      }
+      /* main */
+      main {
+        width: 95%;
+        margin: 20px auto;
+      }
+      .page {
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        width: 95%;
+        box-sizing: border-box;
+        border: 2px solid var(--bg);
+        background-color: var(--surface);
+        padding: 42px;
+        border-radius: 15px;
+        transform: translateY(10px);
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease,
+          border-color 0.5s ease;
+        min-height: 80vh;
+      }
+      .page.active {
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+        width: 100%;
+        transform: translateY(0);
+        border-color: var(--line);
+        margin: 0;
+        height: 65vh;
+      }
+      /* Html Emulator */
+      .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      textarea {
+        width: 90%;
+        height: 150px;
+        padding: 8px;
+        border: 2px solid var(--surface);
+        border-radius: 15px;
+        background-color: var(--bg);
+        color: var(--text);
+        accent-color: var(--accent);
+        resize: none;
+        transition: border-color 0.2s ease;
+      }
+      textarea:hover {
+        border-color: var(--surface-2);
+      }
+      textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .EmulateButton {
+        position: static;
+
+        margin: 0;
+
+        border-radius: 8px;
+
+        width: 80px;
+        height: 30px;
+
+        border: 2px solid var(--accent);
+
+        background-color: var(--accent);
+        color: var(--accent-ink);
+
+        cursor: pointer;
+
+        transition:
+          background-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .brand {
+        align-items: center;
+        gap: 12px;
+        color: var(--text);
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        font-weight: 800;
+        flex-shrink: 0;
+        color: var(--accent-2);
+        display: grid;
+        background-color: var(--surface-2);
+      }
+      .nav-logo {
+        position: absolute;
+        margin-left: 64px;
+        font-weight: 400;
+        font-size: 24px;
+      }
+      .section {
+        display: flex;
+        flex-direction: column;
+        min-height: 175px;
+        border: 1px solid var(--line);
+        background-color: var(--surface-2);
+        border-radius: 14px;
+        transition: all 0.2s ease;
+        height: 42vh;
+        width: 40vw;
+        margin: 0;
+        padding: 20px;
+      }
+      .section:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent-2);
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 16px;
+      }
+      img {
+        border-radius: 5%;
+        height: 10vh;
+      }
+      .game-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 16px;
+        background-color: var(--bg);
+        padding: 20px;
+        overflow-y: auto;
+        border-radius: 12px;
+        max-height: 60vh;
+      }
+      .game-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 175px;
+        padding: 20px;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        transition: all 0.2s ease;
+        animation: fadeIn linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 20%;
+      }
+
+      .game-card h3 {
+        margin: 0 0 8px;
+        color: var(--text);
+      }
+
+      .game-card p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .game-card button {
+        align-self: flex-start;
+        margin-top: auto;
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+      .game-card button:hover {
+        background: var(--accent-2);
+      }
+
+      .game-card:hover {
+        border-color: var(--accent);
+      }
+      #searchInput {
+        gap: 12px;
+        color: var(--text);
+        width: 40vw;
+        height: 32px;
+        font-size: 18px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background-color: var(--surface-2);
+        padding: 8px;
+        margin-bottom: 12px;
+      }
+      @keyframes fadeIn {
+      from {
+       opacity: 0;
+      scale: 0.5
+     }
+     to {
+       opacity: 1;
+       scale: 1;
+      }
+    }
+
+    .music {
+        background-color: var(--surface-2);
+        color: var(--text);
+        margin-left: 18px;
+    }
+
+    </style>
+  </head>
+  <body>
+    <!-- Splash screen (plays AFTER the password) -->
+
+    <div class="intro hide">
+      <h1 class="logo-header">
+        <span class="logo">A&O</span>
+        <span class="logo">Studios</span>
+      </h1>
+    </div>
+
+    <script>
+      const intro = document.querySelector(".intro");
+      const logoSpan = document.querySelectorAll(".logo");
+
+      // Play the A&O splash animation (runs after the password is entered)
+      function playIntro() {
+        // Pop the splash on instantly (no fade-in) so nothing shows behind it
+        intro.classList.add("instant");
+        intro.classList.remove("hide");
+        void intro.offsetWidth;
+        intro.classList.remove("instant");
+
+        logoSpan.forEach((span) => span.classList.remove("active", "fade"));
+
+        // Wait before starting the logo animation
+        setTimeout(() => {
+          logoSpan.forEach((span, idx) => {
+            setTimeout(() => {
+              span.classList.add("active");
+            }, idx * 500);
+          });
+        }, 500);
+
+        // Start fading the logo out
+        setTimeout(() => {
+          logoSpan.forEach((span, idx) => {
+            setTimeout(() => {
+              span.classList.remove("active");
+              span.classList.add("fade");
+            }, idx * 150);
+          });
+        }, 3000);
+
+        // Remove the splash screen
+        setTimeout(() => {
+          intro.classList.add("hide");
+        }, 2000);
+      }
+    </script>
+    <header>
+      <div class="navigation">
+        <span class="brand">&lt/&gt</span>
+        <h1 class="nav-logo">A&O Studios</h1>
+
+        <nav>
+          <button data-page="home" onclick="showPage('home')">Home</button>
+          <button data-page="about" onclick="showPage('about')">Games</button>
+          <button data-page="Emulator" onclick="showPage('Emulator')">Emulator</button>
+          <button data-page="settings" onclick="showPage('settings')">Settings</button>
+          <audio id="backgroundMusic" loop>
+  <source
+    src="https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Music/toby%20fox%20-%20UNDERTALE%20Soundtrack%20-%2054%20Hotel.mp3"
+    type="audio/mpeg"
+  >
+</audio>
+<button class="music" onclick="toggleMusic()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eighth-notes preview-icon"><path d="M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19"/><circle cx="18" cy="16" r="3"/><circle cx="6" cy="19" r="3"/></svg>
+</button>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <!-- Html Emulator -->
+
+      <section id="Emulator" class="page">
+        <h1>HTML Runner</h1>
+
+        <div class="container">
+          <textarea id="code" placeholder="insert html. . ."></textarea>
+
+          <button class="EmulateButton" onclick="Newtab()">Emulate</button>
+        </div>
+      </section>
+
+      <!-- Home -->
+
+      <section id="home" class="page">
+        <h2>Welcome!</h2>
+
+        <p>Welcome, you found our website!</p>
+        <p>
+          We are A&O studios, which is a coding development team that is using
+          HTML and CSS to make websites!
+        </p>
+        <br />
+        <h2>Projects:</h2>
+        <div class="grid-container">
+          <div class="section">
+            <h2>HTML Emulator</h2>
+            <p>
+              We are creating a simple HTML5 runner, so you can test your code
+              real-time.
+            </p>
+          </div>
+          <div class="section">
+            <h2>Other</h2>
+            <p>(add projects here)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+
+      <section id="about" class="page">
+        <h3>Let us know if you know of a game we should add!</h3>
+         <input type="text" id="searchInput" placeholder="Search for games..." onkeyup="filterItems()">
+        <div class="game-grid">
+          <article class="game-card">
+            <h3>Toby Web</h3>
+            <p>Open Toby Web in a new tab.</p>
+            <button onclick="loadGame('TobyWeb.html')">Open</button>
+          </article>
+
+          <article class="game-card">
+            <h3>Undertale</h3>
+            <p>Open Undertale in a new tab.</p>
+            <button onclick="loadGame('Undertale.html')">Open</button>
+          </article>
+
+          <article class="game-card">
+            <h3>Hollow Knight</h3>
+            <p>Open Hollow Knight in a new tab.</p>
+            <button onclick="loadGame('Hollow_Knight.html')">Open</button>
+          </article>
+
+          <article class="game-card">
+            <h3>Geometry Dash</h3>
+            <p>Open Geometry Dash in a new tab.</p>
+            <button onclick="loadGame('GDWEB___Stable_.html')">Open</button>
+          </article>
+
+          <article class="game-card">
+            <h3>Cookie Clicker</h3>
+            <p>
+              Open Cookie Clicker in a new tab. Once you click your language, relaunch the tab.
+            </p>
+            <button onclick="loadGame('Cookie_Clicker.html')">Open</button>
+          </article>
+
+          <article class="game-card">
+            <h3>Minecraft 26.2</h3>
+            <p>
+              Opens MC 26.2 in a new tab. Note: Very big file, don't be
+              discouraged if it takes a long time to load.
+            </p>
+            <button onclick="loadGame('Minecraft_26_2.html')">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>PolyTrack</h3>
+            <p>Opens PolyTrack in a new tab.</p>
+            <button onclick="loadGame('Poly_Track.html')">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Crossy Road</h3>
+            <p>Opens Crossy road in a new tab</p>
+            <button onclick="loadGame('Crossy_Road.html')">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Deltarune</h3>
+            <p>Opens Deltarune in a new tab</p>
+            <button onclick="loadGame('Deltarune.html')">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>Dice a Million</h3>
+            <p>Opens DaM in a new tab</p>
+            <button onclick="loadGame('Dice_a_Million.html')">Open</button>
+          </article>
+          <article class="game-card">
+            <h3>OVO</h3>
+            <p>Opens OvO in a new tab</p>
+            <button onclick="loadGame('OvO.html')">Open</button>
+          </article>
+            <article class="game-card">
+            <h3>Drive Mad</h3>
+            <p>Opens Drive Mad in a new tab</p>
+            <button onclick="loadGame('Drive_Mad.html')">Open</button>
+          </article>
+          </article>
+        </div>
+        <script>
+            function loadGame(file) {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch("https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/Games/" + file)
+              .then((response) => response.text())
+              .then((game) => {
+                newWindow.document.open();
+                newWindow.document.write(game);
+                newWindow.document.close();
+              });
+          }
+            function cloak() {
+            const newWindow = window.open("about:blank", "_blank");
+            fetch(
+              "https://cdn.jsdelivr.net/gh/Axononymous/A-O-Studios@main/index.html",
+            )
+              .then((response) => response.text())
+              .then((cloak) => {
+                newWindow.document.open();
+                newWindow.document.write(cloak);
+                newWindow.document.close();
+              });
+          }
+        </script>
+      </section>
+      <!-- Settings -->
+
+      <section id="settings" class="page">
+        <h2>Settings</h2>
+        <br />
+        <button onclick="cloak()">Cloak Tab</button>
+        <br />
+        <br />
+        <button
+          id="color-toggle"
+          type="button"
+          aria-pressed="false"
+          onclick="Green()"
+        >
+          Switch to green palette
+        </button>
+        <br />
+        <br />
+      </section>
+    </main>
+    <script>
+      /* Page navigation */
+      function showPage(page) {
+        document.querySelectorAll(".page").forEach(function (section) {
+          section.classList.remove("active");
+        });
+
+        document.getElementById(page).classList.add("active");
+        document.querySelectorAll("nav button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.page === page);
+        });
+      }
+      /* Html Emulator */
+      function Newtab() {
+        const code = document.getElementById("code").value;
+        const newWindow = window.open("about:blank", "_blank");
+        newWindow.document.open();
+        newWindow.document.write(code);
+        newWindow.document.close();
+      }
+      function Green() {
+        const root = document.documentElement;
+        const useGreenPalette = root.dataset.theme !== "green";
+        const toggleButton = document.getElementById("color-toggle");
+
+        root.dataset.theme = useGreenPalette ? "green" : "purple";
+        toggleButton.textContent = useGreenPalette
+          ? "Switch to purple palette"
+          : "Switch to green palette";
+        toggleButton.setAttribute("aria-pressed",);
+      }
+      /* This part is for the game search function, I'm gonna try to learn more javascript starting today - Axo */
+      function filterItems() {
+  // Get the user's input value and convert to lowercase
+  const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+  
+  // Grab all the items inside your container
+  const items = document.querySelectorAll('.game-card');
+
+  // Loop through each item and check if it matches the text
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    
+    if (text.includes(searchQuery)) {
+      item.style.display = ""; // Show the item if it matches
+    } else {
+      item.style.display = "none"; // Hide the item if it doesn't match
+    }
+  });
+}
+// Background Music
+const music = document.getElementById("backgroundMusic");
+const musicButton = document.querySelector(".music");
+
+function toggleMusic() {
+  if (music.paused) {
+    music.play().catch(() => {});
+    musicButton.style.backgroundColor = "var(--accent-2)";
+  } else {
+    music.pause();
+    musicButton.style.backgroundColor = "var(--surface-2)";
+  }
+}
+playIntro()
+document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+        document.getElementById("home").classList.add("active");
+        document.querySelector("header").style.visibility = "visible";
+        document.querySelectorAll("nav button").forEach((b) => (b.style.visibility = "visible"));
+        document.querySelectorAll("nav button").forEach((button) => {
+          button.style.visibility = "visible";
+          button.classList.toggle("active", button.dataset.page === "home");
+        });
+    </script>
+  </body>
+</html>
